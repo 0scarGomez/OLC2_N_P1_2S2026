@@ -1,0 +1,84 @@
+import ply.yacc as yacc
+
+from backend.analizador.lexer import tokens, errores_lexicos
+from backend.analizador.ast_nodes import DeclaracionVariable, Primitivo, OperacionBinaria
+
+errores_sintacticos = []
+
+# Definir precedencia 
+precedence = (
+    ('left', 'OR'),
+    ('left', 'AND'),
+    ('left', 'IGUAL_IGUAL', 'DIFERENTE', 'MAYOR_QUE', 'MENOR_QUE', 'MAYOR_IGUAL', 'MENOR_IGUAL'),
+    ('left', 'MAS', 'MENOS'),
+    ('left', 'POR', 'DIV', 'MOD'),
+    ('right', 'NOT'), # Negación unaria
+)
+
+# Regla inicial
+def p_programa(p):
+    '''programa : instrucciones'''
+    p[0] = p[1]
+
+def p_instrucciones_lista(p):
+    '''instrucciones : instrucciones instruccion
+                     | instruccion'''
+    if len(p) == 3:
+        p[0] = p[1] + [p[2]]
+    else:
+        p[0] = [p[1]]
+
+# Instrucción: Declaración de variables
+def p_instruccion_declaracion(p):
+    '''instruccion : R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+                   | R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA'''
+    if p[2] == 'mut':
+        p[0] = DeclaracionVariable(True, p[3], p[5], p[7], p.lineno(1), p.lexpos(1))
+    else:
+        p[0] = DeclaracionVariable(False, p[2], p[4], p[6], p.lineno(1), p.lexpos(1))
+
+# Tipos de datos
+def p_tipo(p):
+    '''tipo : R_I32 
+            | R_F64 
+            | R_STRING 
+            | R_BOOL'''
+    p[0] = p[1]
+
+# Expresiones binarias
+def p_expresion_binaria(p):
+    '''expresion : expresion MAS expresion
+                 | expresion MENOS expresion
+                 | expresion POR expresion
+                 | expresion DIV expresion
+                 | expresion MOD expresion'''
+    p[0] = OperacionBinaria(p[2], p[1], p[3], p.lineno(2), p.lexpos(2))
+
+# Valores primitivos
+def p_expresion_primitiva(p):
+    '''expresion : ENTERO
+                 | DECIMAL
+                 | CADENA
+                 | R_TRUE
+                 | R_FALSE'''
+    if isinstance(p[1], int): tipo = 'i32'
+    elif isinstance(p[1], float): tipo = 'f64'
+    elif p[1] in ['true', 'false']: tipo = 'bool'
+    else: tipo = 'String'
+    
+    p[0] = Primitivo(p[1], tipo, p.lineno(1), p.lexpos(1))
+
+# Manejo de Errores Sintácticos
+def p_error(p):
+    if p:
+        mensaje = f"Se esperaba un token válido, pero se encontró '{p.value}'"
+        print(f"[Error Sintáctico] Línea {p.lineno}\n{mensaje}")
+        errores_sintacticos.append({
+            "tipo": "Sintáctico",
+            "descripcion": mensaje,
+            "linea": p.lineno
+        })
+    else:
+        print("[Error Sintáctico] Fin de archivo inesperado.")
+
+parser = yacc.yacc()
