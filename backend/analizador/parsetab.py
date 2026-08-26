@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftORleftANDleftIGUAL_IGUALDIFERENTEMAYOR_QUEMENOR_QUEMAYOR_IGUALMENOR_IGUALleftMASMENOSleftPORDIVMODrightNOTAMPERSAND AND CADENA CARACTER COMA COR_DER COR_IZQ DECIMAL DIFERENTE DIV DIV_IGUAL DOS_PUNTOS ENTERO FLECHA FLECHA_DOBLE ID IGUAL IGUAL_IGUAL LLAVE_DER LLAVE_IZQ MAS MAS_IGUAL MAYOR_IGUAL MAYOR_QUE MENOR_IGUAL MENOR_QUE MENOS MENOS_IGUAL MOD MOD_IGUAL NOT OR PAR_DER PAR_IZQ POR POR_IGUAL PUNTO PUNTO_COMA R_BOOL R_BREAK R_CHAR R_CONTINUE R_ELSE R_F64 R_FALSE R_FN R_I32 R_IF R_LET R_LOOP R_MATCH R_MUT R_PRINTLN R_RETURN R_STRING R_STRUCT R_TRUE R_WHILEprograma : instruccionesinstrucciones : instrucciones instruccion\n| instruccioninstruccion : R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA\n| R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMAtipo : R_I32 \n| R_F64 \n| R_STRING \n| R_BOOLexpresion : expresion MAS expresion\n| expresion MENOS expresion\n| expresion POR expresion\n| expresion DIV expresion\n| expresion MOD expresionexpresion : ENTERO\n| DECIMAL\n| CADENA\n| R_TRUE\n| R_FALSE'
+_lr_signature = 'leftORleftANDleftIGUAL_IGUALDIFERENTEMAYOR_QUEMENOR_QUEMAYOR_IGUALMENOR_IGUALleftMASMENOSleftPORDIVMODrightNOTAMPERSAND AND CADENA CARACTER COMA COR_DER COR_IZQ DECIMAL DIFERENTE DIV DIV_IGUAL DOS_PUNTOS ENTERO FLECHA FLECHA_DOBLE ID IGUAL IGUAL_IGUAL LLAVE_DER LLAVE_IZQ MAS MAS_IGUAL MAYOR_IGUAL MAYOR_QUE MENOR_IGUAL MENOR_QUE MENOS MENOS_IGUAL MOD MOD_IGUAL NOT OR PAR_DER PAR_IZQ POR POR_IGUAL PUNTO PUNTO_COMA R_BOOL R_BREAK R_CHAR R_CONTINUE R_ELSE R_F64 R_FALSE R_FN R_I32 R_IF R_LET R_LOOP R_MATCH R_MUT R_PRINTLN R_RETURN R_STRING R_STRUCT R_TRUE R_WHILEprograma : instruccionesinstrucciones : instrucciones instruccion\n| instruccioninstruccion : R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA\n| R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMAinstruccion : R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMAtipo : R_I32 \n| R_F64 \n| R_STRING \n| R_BOOLexpresion : expresion MAS expresion\n| expresion MENOS expresion\n| expresion POR expresion\n| expresion DIV expresion\n| expresion MOD expresionexpresion : ENTERO\n| DECIMAL\n| CADENA\n| R_TRUE\n| R_FALSEexpresion : ID'
     
-_lr_action_items = {'R_LET':([0,2,3,5,26,32,],[4,4,-3,-2,-5,-4,]),'$end':([1,2,3,5,26,32,],[0,-1,-3,-2,-5,-4,]),'R_MUT':([4,],[6,]),'ID':([4,6,],[7,8,]),'DOS_PUNTOS':([7,8,],[9,10,]),'R_I32':([9,10,],[12,12,]),'R_F64':([9,10,],[13,13,]),'R_STRING':([9,10,],[14,14,]),'R_BOOL':([9,10,],[15,15,]),'IGUAL':([11,12,13,14,15,16,],[17,-6,-7,-8,-9,18,]),'ENTERO':([17,18,27,28,29,30,31,],[20,20,20,20,20,20,20,]),'DECIMAL':([17,18,27,28,29,30,31,],[21,21,21,21,21,21,21,]),'CADENA':([17,18,27,28,29,30,31,],[22,22,22,22,22,22,22,]),'R_TRUE':([17,18,27,28,29,30,31,],[23,23,23,23,23,23,23,]),'R_FALSE':([17,18,27,28,29,30,31,],[24,24,24,24,24,24,24,]),'PUNTO_COMA':([19,20,21,22,23,24,25,33,34,35,36,37,],[26,-15,-16,-17,-18,-19,32,-10,-11,-12,-13,-14,]),'MAS':([19,20,21,22,23,24,25,33,34,35,36,37,],[27,-15,-16,-17,-18,-19,27,-10,-11,-12,-13,-14,]),'MENOS':([19,20,21,22,23,24,25,33,34,35,36,37,],[28,-15,-16,-17,-18,-19,28,-10,-11,-12,-13,-14,]),'POR':([19,20,21,22,23,24,25,33,34,35,36,37,],[29,-15,-16,-17,-18,-19,29,29,29,-12,-13,-14,]),'DIV':([19,20,21,22,23,24,25,33,34,35,36,37,],[30,-15,-16,-17,-18,-19,30,30,30,-12,-13,-14,]),'MOD':([19,20,21,22,23,24,25,33,34,35,36,37,],[31,-15,-16,-17,-18,-19,31,31,31,-12,-13,-14,]),}
+_lr_action_items = {'R_LET':([0,2,3,6,36,43,44,],[4,4,-3,-2,-6,-5,-4,]),'R_PRINTLN':([0,2,3,6,36,43,44,],[5,5,-3,-2,-6,-5,-4,]),'$end':([1,2,3,6,36,43,44,],[0,-1,-3,-2,-6,-5,-4,]),'R_MUT':([4,],[7,]),'ID':([4,7,12,27,29,30,31,32,33,34,],[8,10,25,25,25,25,25,25,25,25,]),'NOT':([5,],[9,]),'DOS_PUNTOS':([8,10,],[11,13,]),'PAR_IZQ':([9,],[12,]),'R_I32':([11,13,],[15,15,]),'R_F64':([11,13,],[16,16,]),'R_STRING':([11,13,],[17,17,]),'R_BOOL':([11,13,],[18,18,]),'ENTERO':([12,27,29,30,31,32,33,34,],[20,20,20,20,20,20,20,20,]),'DECIMAL':([12,27,29,30,31,32,33,34,],[21,21,21,21,21,21,21,21,]),'CADENA':([12,27,29,30,31,32,33,34,],[22,22,22,22,22,22,22,22,]),'R_TRUE':([12,27,29,30,31,32,33,34,],[23,23,23,23,23,23,23,23,]),'R_FALSE':([12,27,29,30,31,32,33,34,],[24,24,24,24,24,24,24,24,]),'IGUAL':([14,15,16,17,18,26,],[27,-7,-8,-9,-10,34,]),'PAR_DER':([19,20,21,22,23,24,25,37,38,39,40,41,],[28,-16,-17,-18,-19,-20,-21,-11,-12,-13,-14,-15,]),'MAS':([19,20,21,22,23,24,25,35,37,38,39,40,41,42,],[29,-16,-17,-18,-19,-20,-21,29,-11,-12,-13,-14,-15,29,]),'MENOS':([19,20,21,22,23,24,25,35,37,38,39,40,41,42,],[30,-16,-17,-18,-19,-20,-21,30,-11,-12,-13,-14,-15,30,]),'POR':([19,20,21,22,23,24,25,35,37,38,39,40,41,42,],[31,-16,-17,-18,-19,-20,-21,31,31,31,-13,-14,-15,31,]),'DIV':([19,20,21,22,23,24,25,35,37,38,39,40,41,42,],[32,-16,-17,-18,-19,-20,-21,32,32,32,-13,-14,-15,32,]),'MOD':([19,20,21,22,23,24,25,35,37,38,39,40,41,42,],[33,-16,-17,-18,-19,-20,-21,33,33,33,-13,-14,-15,33,]),'PUNTO_COMA':([20,21,22,23,24,25,28,35,37,38,39,40,41,42,],[-16,-17,-18,-19,-20,-21,36,43,-11,-12,-13,-14,-15,44,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'programa':([0,],[1,]),'instrucciones':([0,],[2,]),'instruccion':([0,2,],[3,5,]),'tipo':([9,10,],[11,16,]),'expresion':([17,18,27,28,29,30,31,],[19,25,33,34,35,36,37,]),}
+_lr_goto_items = {'programa':([0,],[1,]),'instrucciones':([0,],[2,]),'instruccion':([0,2,],[3,6,]),'tipo':([11,13,],[14,26,]),'expresion':([12,27,29,30,31,32,33,34,],[19,35,37,38,39,40,41,42,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -32,18 +32,20 @@ _lr_productions = [
   ('instrucciones -> instruccion','instrucciones',1,'p_instrucciones_lista','parser.py',25),
   ('instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA','instruccion',8,'p_instruccion_declaracion','parser.py',33),
   ('instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA','instruccion',7,'p_instruccion_declaracion','parser.py',34),
-  ('tipo -> R_I32','tipo',1,'p_tipo','parser.py',42),
-  ('tipo -> R_F64','tipo',1,'p_tipo','parser.py',43),
-  ('tipo -> R_STRING','tipo',1,'p_tipo','parser.py',44),
-  ('tipo -> R_BOOL','tipo',1,'p_tipo','parser.py',45),
-  ('expresion -> expresion MAS expresion','expresion',3,'p_expresion_binaria','parser.py',50),
-  ('expresion -> expresion MENOS expresion','expresion',3,'p_expresion_binaria','parser.py',51),
-  ('expresion -> expresion POR expresion','expresion',3,'p_expresion_binaria','parser.py',52),
-  ('expresion -> expresion DIV expresion','expresion',3,'p_expresion_binaria','parser.py',53),
-  ('expresion -> expresion MOD expresion','expresion',3,'p_expresion_binaria','parser.py',54),
-  ('expresion -> ENTERO','expresion',1,'p_expresion_primitiva','parser.py',59),
-  ('expresion -> DECIMAL','expresion',1,'p_expresion_primitiva','parser.py',60),
-  ('expresion -> CADENA','expresion',1,'p_expresion_primitiva','parser.py',61),
-  ('expresion -> R_TRUE','expresion',1,'p_expresion_primitiva','parser.py',62),
-  ('expresion -> R_FALSE','expresion',1,'p_expresion_primitiva','parser.py',63),
+  ('instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA','instruccion',6,'p_instruccion_println','parser.py',41),
+  ('tipo -> R_I32','tipo',1,'p_tipo','parser.py',46),
+  ('tipo -> R_F64','tipo',1,'p_tipo','parser.py',47),
+  ('tipo -> R_STRING','tipo',1,'p_tipo','parser.py',48),
+  ('tipo -> R_BOOL','tipo',1,'p_tipo','parser.py',49),
+  ('expresion -> expresion MAS expresion','expresion',3,'p_expresion_binaria','parser.py',54),
+  ('expresion -> expresion MENOS expresion','expresion',3,'p_expresion_binaria','parser.py',55),
+  ('expresion -> expresion POR expresion','expresion',3,'p_expresion_binaria','parser.py',56),
+  ('expresion -> expresion DIV expresion','expresion',3,'p_expresion_binaria','parser.py',57),
+  ('expresion -> expresion MOD expresion','expresion',3,'p_expresion_binaria','parser.py',58),
+  ('expresion -> ENTERO','expresion',1,'p_expresion_primitiva','parser.py',63),
+  ('expresion -> DECIMAL','expresion',1,'p_expresion_primitiva','parser.py',64),
+  ('expresion -> CADENA','expresion',1,'p_expresion_primitiva','parser.py',65),
+  ('expresion -> R_TRUE','expresion',1,'p_expresion_primitiva','parser.py',66),
+  ('expresion -> R_FALSE','expresion',1,'p_expresion_primitiva','parser.py',67),
+  ('expresion -> ID','expresion',1,'p_expresion_id','parser.py',76),
 ]

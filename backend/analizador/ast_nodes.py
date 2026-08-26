@@ -74,3 +74,30 @@ class DeclaracionVariable(Instruccion):
             self.es_mutable, entorno.nombre_ambito, self.linea, self.columna
         )
         entorno.guardar_variable(self.identificador, nuevo_simbolo)
+        
+class Imprimir(Instruccion):
+    def __init__(self, expresion, linea, columna):
+        super().__init__(linea, columna)
+        self.expresion = expresion
+
+    def ejecutar(self, entorno):
+        resultado = self.expresion.ejecutar(entorno)
+        if resultado and resultado.tipo != "None":
+            print(f"> {resultado.valor}")
+
+class AccesoVariable(Expresion):
+    def __init__(self, identificador, linea, columna):
+        super().__init__(linea, columna)
+        self.identificador = identificador
+
+    def ejecutar(self, entorno):
+        # Buscamos la variable en el entorno (Tabla de Símbolos)
+        simbolo = entorno.obtener_variable(self.identificador)
+        
+        if simbolo is None:
+            mensaje = f"La variable '{self.identificador}' no ha sido declarada."
+            print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\n{mensaje}")
+            return ResultadoObtenido("None", "None")
+            
+        # Si existe, devolvemos su valor y su tipo
+        return ResultadoObtenido(simbolo.valor, simbolo.tipo)

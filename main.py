@@ -4,9 +4,8 @@ from backend.analizador.tabla_simbolos import Entorno
 
 codigo_prueba = """
 let mut x: i32 = 10 + 5;
-let y: String = 20; 
+println!(x);
 """
-
 def probar_interprete():
     print("=== INICIANDO COMPILACIÓN Y EJECUCIÓN ===")
     

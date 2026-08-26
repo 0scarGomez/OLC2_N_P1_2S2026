@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 
 from backend.analizador.lexer import tokens, errores_lexicos
-from backend.analizador.ast_nodes import DeclaracionVariable, Primitivo, OperacionBinaria
+from backend.analizador.ast_nodes import DeclaracionVariable, Primitivo, OperacionBinaria, Imprimir, AccesoVariable
 
 errores_sintacticos = []
 
@@ -37,6 +37,10 @@ def p_instruccion_declaracion(p):
     else:
         p[0] = DeclaracionVariable(False, p[2], p[4], p[6], p.lineno(1), p.lexpos(1))
 
+def p_instruccion_println(p):
+    '''instruccion : R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA'''
+    p[0] = Imprimir(p[4], p.lineno(1), p.lexpos(1))
+
 # Tipos de datos
 def p_tipo(p):
     '''tipo : R_I32 
@@ -67,6 +71,10 @@ def p_expresion_primitiva(p):
     else: tipo = 'String'
     
     p[0] = Primitivo(p[1], tipo, p.lineno(1), p.lexpos(1))
+
+def p_expresion_id(p):
+    '''expresion : ID'''
+    p[0] = AccesoVariable(p[1], p.lineno(1), p.lexpos(1))
 
 # Manejo de Errores Sintácticos
 def p_error(p):
