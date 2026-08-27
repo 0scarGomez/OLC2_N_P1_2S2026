@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftORleftANDleftIGUAL_IGUALDIFERENTEMAYOR_QUEMENOR_QUEMAYOR_IGUALMENOR_IGUALleftMASMENOSleftPORDIVMODrightNOTAMPERSAND AND CADENA CARACTER COMA COR_DER COR_IZQ DECIMAL DIFERENTE DIV DIV_IGUAL DOS_PUNTOS ENTERO FLECHA FLECHA_DOBLE ID IGUAL IGUAL_IGUAL LLAVE_DER LLAVE_IZQ MAS MAS_IGUAL MAYOR_IGUAL MAYOR_QUE MENOR_IGUAL MENOR_QUE MENOS MENOS_IGUAL MOD MOD_IGUAL NOT OR PAR_DER PAR_IZQ POR POR_IGUAL PUNTO PUNTO_COMA R_BOOL R_BREAK R_CHAR R_CONTINUE R_ELSE R_F64 R_FALSE R_FN R_I32 R_IF R_LET R_LOOP R_MATCH R_MUT R_PRINTLN R_RETURN R_STRING R_STRUCT R_TRUE R_WHILEprograma : instruccionesinstrucciones : instrucciones instruccion\n| instruccioninstruccion : R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA\n| R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMAinstruccion : R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMAtipo : R_I32 \n| R_F64 \n| R_STRING \n| R_BOOLexpresion : expresion MAS expresion\n| expresion MENOS expresion\n| expresion POR expresion\n| expresion DIV expresion\n| expresion MOD expresionexpresion : ENTERO\n| DECIMAL\n| CADENA\n| R_TRUE\n| R_FALSEexpresion : IDbloque : LLAVE_IZQ instrucciones LLAVE_DER\n| LLAVE_IZQ LLAVE_DERinstruccion : R_IF expresion bloque\n| R_IF expresion bloque R_ELSE bloque'
+_lr_signature = 'leftORleftANDleftIGUAL_IGUALDIFERENTEMAYOR_QUEMENOR_QUEMAYOR_IGUALMENOR_IGUALleftMASMENOSleftPORDIVMODrightNOTAMPERSAND AND CADENA CARACTER COMA COR_DER COR_IZQ DECIMAL DIFERENTE DIV DIV_IGUAL DOS_PUNTOS ENTERO FLECHA FLECHA_DOBLE ID IGUAL IGUAL_IGUAL LLAVE_DER LLAVE_IZQ MAS MAS_IGUAL MAYOR_IGUAL MAYOR_QUE MENOR_IGUAL MENOR_QUE MENOS MENOS_IGUAL MOD MOD_IGUAL NOT OR PAR_DER PAR_IZQ POR POR_IGUAL PUNTO PUNTO_COMA R_BOOL R_BREAK R_CHAR R_CONTINUE R_ELSE R_F64 R_FALSE R_FN R_I32 R_IF R_LET R_LOOP R_MATCH R_MUT R_PRINTLN R_RETURN R_STRING R_STRUCT R_TRUE R_WHILEprograma : instruccionesinstrucciones : instrucciones instruccion\n| instruccioninstruccion : R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA\n| R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMAinstruccion : R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMAtipo : R_I32 \n| R_F64 \n| R_STRING \n| R_BOOLexpresion : expresion MAS expresion\n| expresion MENOS expresion\n| expresion POR expresion\n| expresion DIV expresion\n| expresion MOD expresion\n| expresion MAYOR_QUE expresion\n| expresion MENOR_QUE expresion\n| expresion MAYOR_IGUAL expresion\n| expresion MENOR_IGUAL expresion\n| expresion IGUAL_IGUAL expresion\n| expresion DIFERENTE expresion\n| expresion AND expresion\n| expresion OR expresionexpresion : ENTERO\n| DECIMAL\n| CADENA\n| R_TRUE\n| R_FALSEexpresion : IDbloque : LLAVE_IZQ instrucciones LLAVE_DER\n| LLAVE_IZQ LLAVE_DERinstruccion : R_IF expresion bloque\n| R_IF expresion bloque R_ELSE bloqueinstruccion : ID IGUAL expresion PUNTO_COMAinstruccion : R_WHILE expresion bloque'
     
-_lr_action_items = {'R_LET':([0,2,3,7,21,27,41,42,46,47,50,52,53,],[4,4,-3,-2,-24,4,4,-23,-25,-22,-6,-5,-4,]),'R_PRINTLN':([0,2,3,7,21,27,41,42,46,47,50,52,53,],[5,5,-3,-2,-24,5,5,-23,-25,-22,-6,-5,-4,]),'R_IF':([0,2,3,7,21,27,41,42,46,47,50,52,53,],[6,6,-3,-2,-24,6,6,-23,-25,-22,-6,-5,-4,]),'$end':([1,2,3,7,21,42,46,47,50,52,53,],[0,-1,-3,-2,-24,-23,-25,-22,-6,-5,-4,]),'LLAVE_DER':([3,7,21,27,41,42,46,47,50,52,53,],[-3,-2,-24,42,47,-23,-25,-22,-6,-5,-4,]),'R_MUT':([4,],[8,]),'ID':([4,6,8,20,22,23,24,25,26,44,48,],[9,17,18,17,17,17,17,17,17,17,17,]),'NOT':([5,],[10,]),'ENTERO':([6,20,22,23,24,25,26,44,48,],[12,12,12,12,12,12,12,12,12,]),'DECIMAL':([6,20,22,23,24,25,26,44,48,],[13,13,13,13,13,13,13,13,13,]),'CADENA':([6,20,22,23,24,25,26,44,48,],[14,14,14,14,14,14,14,14,14,]),'R_TRUE':([6,20,22,23,24,25,26,44,48,],[15,15,15,15,15,15,15,15,15,]),'R_FALSE':([6,20,22,23,24,25,26,44,48,],[16,16,16,16,16,16,16,16,16,]),'DOS_PUNTOS':([9,18,],[19,28,]),'PAR_IZQ':([10,],[20,]),'MAS':([11,12,13,14,15,16,17,34,36,37,38,39,40,49,51,],[22,-16,-17,-18,-19,-20,-21,22,-11,-12,-13,-14,-15,22,22,]),'MENOS':([11,12,13,14,15,16,17,34,36,37,38,39,40,49,51,],[23,-16,-17,-18,-19,-20,-21,23,-11,-12,-13,-14,-15,23,23,]),'POR':([11,12,13,14,15,16,17,34,36,37,38,39,40,49,51,],[24,-16,-17,-18,-19,-20,-21,24,24,24,-13,-14,-15,24,24,]),'DIV':([11,12,13,14,15,16,17,34,36,37,38,39,40,49,51,],[25,-16,-17,-18,-19,-20,-21,25,25,25,-13,-14,-15,25,25,]),'MOD':([11,12,13,14,15,16,17,34,36,37,38,39,40,49,51,],[26,-16,-17,-18,-19,-20,-21,26,26,26,-13,-14,-15,26,26,]),'LLAVE_IZQ':([11,12,13,14,15,16,17,35,36,37,38,39,40,],[27,-16,-17,-18,-19,-20,-21,27,-11,-12,-13,-14,-15,]),'PAR_DER':([12,13,14,15,16,17,34,36,37,38,39,40,],[-16,-17,-18,-19,-20,-21,45,-11,-12,-13,-14,-15,]),'PUNTO_COMA':([12,13,14,15,16,17,36,37,38,39,40,45,49,51,],[-16,-17,-18,-19,-20,-21,-11,-12,-13,-14,-15,50,52,53,]),'R_I32':([19,28,],[30,30,]),'R_F64':([19,28,],[31,31,]),'R_STRING':([19,28,],[32,32,]),'R_BOOL':([19,28,],[33,33,]),'R_ELSE':([21,42,47,],[35,-23,-22,]),'IGUAL':([29,30,31,32,33,43,],[44,-7,-8,-9,-10,48,]),}
+_lr_action_items = {'R_LET':([0,2,3,9,26,40,41,48,64,65,69,70,73,75,76,],[4,4,-3,-2,-32,4,-35,-34,4,-31,-33,-30,-6,-5,-4,]),'R_PRINTLN':([0,2,3,9,26,40,41,48,64,65,69,70,73,75,76,],[6,6,-3,-2,-32,6,-35,-34,6,-31,-33,-30,-6,-5,-4,]),'R_IF':([0,2,3,9,26,40,41,48,64,65,69,70,73,75,76,],[7,7,-3,-2,-32,7,-35,-34,7,-31,-33,-30,-6,-5,-4,]),'ID':([0,2,3,4,7,8,9,10,12,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,48,64,65,67,69,70,71,73,75,76,],[5,5,-3,11,20,20,-2,22,20,20,-32,20,20,20,20,20,20,20,20,20,20,20,20,20,5,-35,-34,5,-31,20,-33,-30,20,-6,-5,-4,]),'R_WHILE':([0,2,3,9,26,40,41,48,64,65,69,70,73,75,76,],[8,8,-3,-2,-32,8,-35,-34,8,-31,-33,-30,-6,-5,-4,]),'$end':([1,2,3,9,26,41,48,65,69,70,73,75,76,],[0,-1,-3,-2,-32,-35,-34,-31,-33,-30,-6,-5,-4,]),'LLAVE_DER':([3,9,26,40,41,48,64,65,69,70,73,75,76,],[-3,-2,-32,65,-35,-34,70,-31,-33,-30,-6,-5,-4,]),'R_MUT':([4,],[10,]),'IGUAL':([5,43,44,45,46,47,66,],[12,67,-7,-8,-9,-10,71,]),'NOT':([6,],[13,]),'ENTERO':([7,8,12,25,27,28,29,30,31,32,33,34,35,36,37,38,39,67,71,],[15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,]),'DECIMAL':([7,8,12,25,27,28,29,30,31,32,33,34,35,36,37,38,39,67,71,],[16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,]),'CADENA':([7,8,12,25,27,28,29,30,31,32,33,34,35,36,37,38,39,67,71,],[17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,]),'R_TRUE':([7,8,12,25,27,28,29,30,31,32,33,34,35,36,37,38,39,67,71,],[18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,]),'R_FALSE':([7,8,12,25,27,28,29,30,31,32,33,34,35,36,37,38,39,67,71,],[19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,]),'DOS_PUNTOS':([11,22,],[23,42,]),'PAR_IZQ':([13,],[25,]),'MAS':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[27,-24,-25,-26,-27,-28,-29,27,27,27,-11,-12,-13,-14,-15,27,27,27,27,27,27,27,27,27,27,]),'MENOS':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[28,-24,-25,-26,-27,-28,-29,28,28,28,-11,-12,-13,-14,-15,28,28,28,28,28,28,28,28,28,28,]),'POR':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[29,-24,-25,-26,-27,-28,-29,29,29,29,29,29,-13,-14,-15,29,29,29,29,29,29,29,29,29,29,]),'DIV':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[30,-24,-25,-26,-27,-28,-29,30,30,30,30,30,-13,-14,-15,30,30,30,30,30,30,30,30,30,30,]),'MOD':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[31,-24,-25,-26,-27,-28,-29,31,31,31,31,31,-13,-14,-15,31,31,31,31,31,31,31,31,31,31,]),'MAYOR_QUE':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[32,-24,-25,-26,-27,-28,-29,32,32,32,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,32,32,32,32,]),'MENOR_QUE':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[33,-24,-25,-26,-27,-28,-29,33,33,33,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,33,33,33,33,]),'MAYOR_IGUAL':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[34,-24,-25,-26,-27,-28,-29,34,34,34,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,34,34,34,34,]),'MENOR_IGUAL':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[35,-24,-25,-26,-27,-28,-29,35,35,35,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,35,35,35,35,]),'IGUAL_IGUAL':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[36,-24,-25,-26,-27,-28,-29,36,36,36,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,36,36,36,36,]),'DIFERENTE':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[37,-24,-25,-26,-27,-28,-29,37,37,37,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,37,37,37,37,]),'AND':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[38,-24,-25,-26,-27,-28,-29,38,38,38,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,38,38,38,]),'OR':([14,15,16,17,18,19,20,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,],[39,-24,-25,-26,-27,-28,-29,39,39,39,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,-23,39,39,]),'LLAVE_IZQ':([14,15,16,17,18,19,20,21,50,51,52,53,54,55,56,57,58,59,60,61,62,63,],[40,-24,-25,-26,-27,-28,-29,40,40,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,-23,]),'PUNTO_COMA':([15,16,17,18,19,20,24,51,52,53,54,55,56,57,58,59,60,61,62,63,68,72,74,],[-24,-25,-26,-27,-28,-29,48,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,-23,73,75,76,]),'PAR_DER':([15,16,17,18,19,20,49,51,52,53,54,55,56,57,58,59,60,61,62,63,],[-24,-25,-26,-27,-28,-29,68,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,-23,]),'R_I32':([23,42,],[44,44,]),'R_F64':([23,42,],[45,45,]),'R_STRING':([23,42,],[46,46,]),'R_BOOL':([23,42,],[47,47,]),'R_ELSE':([26,65,70,],[50,-31,-30,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'programa':([0,],[1,]),'instrucciones':([0,27,],[2,41,]),'instruccion':([0,2,27,41,],[3,7,3,7,]),'expresion':([6,20,22,23,24,25,26,44,48,],[11,34,36,37,38,39,40,49,51,]),'bloque':([11,35,],[21,46,]),'tipo':([19,28,],[29,43,]),}
+_lr_goto_items = {'programa':([0,],[1,]),'instrucciones':([0,40,],[2,64,]),'instruccion':([0,2,40,64,],[3,9,3,9,]),'expresion':([7,8,12,25,27,28,29,30,31,32,33,34,35,36,37,38,39,67,71,],[14,21,24,49,51,52,53,54,55,56,57,58,59,60,61,62,63,72,74,]),'bloque':([14,21,50,],[26,41,69,]),'tipo':([23,42,],[43,66,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,29 +27,39 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> programa","S'",1,None,None,None),
-  ('programa -> instrucciones','programa',1,'p_programa','parser.py',20),
-  ('instrucciones -> instrucciones instruccion','instrucciones',2,'p_instrucciones_lista','parser.py',24),
-  ('instrucciones -> instruccion','instrucciones',1,'p_instrucciones_lista','parser.py',25),
-  ('instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA','instruccion',8,'p_instruccion_declaracion','parser.py',33),
-  ('instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA','instruccion',7,'p_instruccion_declaracion','parser.py',34),
-  ('instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA','instruccion',6,'p_instruccion_println','parser.py',41),
-  ('tipo -> R_I32','tipo',1,'p_tipo','parser.py',46),
-  ('tipo -> R_F64','tipo',1,'p_tipo','parser.py',47),
-  ('tipo -> R_STRING','tipo',1,'p_tipo','parser.py',48),
-  ('tipo -> R_BOOL','tipo',1,'p_tipo','parser.py',49),
-  ('expresion -> expresion MAS expresion','expresion',3,'p_expresion_binaria','parser.py',54),
-  ('expresion -> expresion MENOS expresion','expresion',3,'p_expresion_binaria','parser.py',55),
-  ('expresion -> expresion POR expresion','expresion',3,'p_expresion_binaria','parser.py',56),
-  ('expresion -> expresion DIV expresion','expresion',3,'p_expresion_binaria','parser.py',57),
-  ('expresion -> expresion MOD expresion','expresion',3,'p_expresion_binaria','parser.py',58),
-  ('expresion -> ENTERO','expresion',1,'p_expresion_primitiva','parser.py',63),
-  ('expresion -> DECIMAL','expresion',1,'p_expresion_primitiva','parser.py',64),
-  ('expresion -> CADENA','expresion',1,'p_expresion_primitiva','parser.py',65),
-  ('expresion -> R_TRUE','expresion',1,'p_expresion_primitiva','parser.py',66),
-  ('expresion -> R_FALSE','expresion',1,'p_expresion_primitiva','parser.py',67),
-  ('expresion -> ID','expresion',1,'p_expresion_id','parser.py',76),
-  ('bloque -> LLAVE_IZQ instrucciones LLAVE_DER','bloque',3,'p_bloque','parser.py',93),
-  ('bloque -> LLAVE_IZQ LLAVE_DER','bloque',2,'p_bloque','parser.py',94),
-  ('instruccion -> R_IF expresion bloque','instruccion',3,'p_instruccion_if','parser.py',102),
-  ('instruccion -> R_IF expresion bloque R_ELSE bloque','instruccion',5,'p_instruccion_if','parser.py',103),
+  ('programa -> instrucciones','programa',1,'p_programa','parser.py',24),
+  ('instrucciones -> instrucciones instruccion','instrucciones',2,'p_instrucciones_lista','parser.py',28),
+  ('instrucciones -> instruccion','instrucciones',1,'p_instrucciones_lista','parser.py',29),
+  ('instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA','instruccion',8,'p_instruccion_declaracion','parser.py',37),
+  ('instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA','instruccion',7,'p_instruccion_declaracion','parser.py',38),
+  ('instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA','instruccion',6,'p_instruccion_println','parser.py',45),
+  ('tipo -> R_I32','tipo',1,'p_tipo','parser.py',50),
+  ('tipo -> R_F64','tipo',1,'p_tipo','parser.py',51),
+  ('tipo -> R_STRING','tipo',1,'p_tipo','parser.py',52),
+  ('tipo -> R_BOOL','tipo',1,'p_tipo','parser.py',53),
+  ('expresion -> expresion MAS expresion','expresion',3,'p_expresion_binaria','parser.py',58),
+  ('expresion -> expresion MENOS expresion','expresion',3,'p_expresion_binaria','parser.py',59),
+  ('expresion -> expresion POR expresion','expresion',3,'p_expresion_binaria','parser.py',60),
+  ('expresion -> expresion DIV expresion','expresion',3,'p_expresion_binaria','parser.py',61),
+  ('expresion -> expresion MOD expresion','expresion',3,'p_expresion_binaria','parser.py',62),
+  ('expresion -> expresion MAYOR_QUE expresion','expresion',3,'p_expresion_binaria','parser.py',63),
+  ('expresion -> expresion MENOR_QUE expresion','expresion',3,'p_expresion_binaria','parser.py',64),
+  ('expresion -> expresion MAYOR_IGUAL expresion','expresion',3,'p_expresion_binaria','parser.py',65),
+  ('expresion -> expresion MENOR_IGUAL expresion','expresion',3,'p_expresion_binaria','parser.py',66),
+  ('expresion -> expresion IGUAL_IGUAL expresion','expresion',3,'p_expresion_binaria','parser.py',67),
+  ('expresion -> expresion DIFERENTE expresion','expresion',3,'p_expresion_binaria','parser.py',68),
+  ('expresion -> expresion AND expresion','expresion',3,'p_expresion_binaria','parser.py',69),
+  ('expresion -> expresion OR expresion','expresion',3,'p_expresion_binaria','parser.py',70),
+  ('expresion -> ENTERO','expresion',1,'p_expresion_primitiva','parser.py',75),
+  ('expresion -> DECIMAL','expresion',1,'p_expresion_primitiva','parser.py',76),
+  ('expresion -> CADENA','expresion',1,'p_expresion_primitiva','parser.py',77),
+  ('expresion -> R_TRUE','expresion',1,'p_expresion_primitiva','parser.py',78),
+  ('expresion -> R_FALSE','expresion',1,'p_expresion_primitiva','parser.py',79),
+  ('expresion -> ID','expresion',1,'p_expresion_id','parser.py',99),
+  ('bloque -> LLAVE_IZQ instrucciones LLAVE_DER','bloque',3,'p_bloque','parser.py',116),
+  ('bloque -> LLAVE_IZQ LLAVE_DER','bloque',2,'p_bloque','parser.py',117),
+  ('instruccion -> R_IF expresion bloque','instruccion',3,'p_instruccion_if','parser.py',125),
+  ('instruccion -> R_IF expresion bloque R_ELSE bloque','instruccion',5,'p_instruccion_if','parser.py',126),
+  ('instruccion -> ID IGUAL expresion PUNTO_COMA','instruccion',4,'p_instruccion_asignacion','parser.py',134),
+  ('instruccion -> R_WHILE expresion bloque','instruccion',3,'p_instruccion_while','parser.py',139),
 ]

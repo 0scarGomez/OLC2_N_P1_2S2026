@@ -3,11 +3,13 @@ from backend.analizador.parser  import parser
 from backend.analizador.tabla_simbolos import Entorno
 
 codigo_prueba = """
-let mut x: i32 = 10;
-if true {
-    let y: i32 = 20;
-    println!(x);
-    println!(y);
+let mut i: i32 = 0;
+while i < 5 {
+    if i == 2 {
+        break;
+    }
+    println!(i);
+    i = i + 1;
 }
 """
 def probar_interprete():

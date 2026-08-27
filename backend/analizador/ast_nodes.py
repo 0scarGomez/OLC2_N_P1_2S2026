@@ -30,25 +30,58 @@ class OperacionBinaria(Expresion):
     def __init__(self, operador, izq, der, linea, columna):
         super().__init__(linea, columna)
         self.operador = operador
-        self.izq = izq  # Nodo expresión izquierdo
-        self.der = der  # Nodo expresión derecho
+        self.izq = izq
+        self.der = der
 
     def ejecutar(self, entorno):
         izq = self.izq.ejecutar(entorno)
         der = self.der.ejecutar(entorno)
 
+        # Operadores Aritméticos
         if self.operador == '+':
-            # Validación semántica según la tabla de tipos
             if izq.tipo == 'i32' and der.tipo == 'i32':
                 return ResultadoObtenido(izq.valor + der.valor, 'i32')
             elif izq.tipo == 'f64' and der.tipo == 'f64':
                 return ResultadoObtenido(izq.valor + der.valor, 'f64')
-            else:
-                # Generamos el Error Semántico si los tipos no son compatibles
-                mensaje = f"No es posible aplicar el operador '+' entre los tipos {izq.tipo} y {der.tipo}."
-                print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\n{mensaje}")
-                # Resiliencia
-                return ResultadoObtenido("None", "None")
+        elif self.operador == '-':
+            if izq.tipo in ['i32', 'f64'] and izq.tipo == der.tipo:
+                return ResultadoObtenido(izq.valor - der.valor, izq.tipo)
+        elif self.operador == '*':
+            if izq.tipo in ['i32', 'f64'] and izq.tipo == der.tipo:
+                return ResultadoObtenido(izq.valor * der.valor, izq.tipo)
+        elif self.operador == '/':
+            if izq.tipo in ['i32', 'f64'] and izq.tipo == der.tipo:
+                if der.valor == 0:
+                    print(f"[Error Semántico] Línea {self.linea}: División entre cero.")
+                    return ResultadoObtenido("None", "None")
+                return ResultadoObtenido(izq.valor / der.valor, izq.tipo)
+
+        # Operadores Relacionales
+        elif self.operador in ['>', '<', '>=', '<=']:
+            if izq.tipo in ['i32', 'f64'] and der.tipo in ['i32', 'f64']:
+                if self.operador == '>': res = izq.valor > der.valor
+                elif self.operador == '<': res = izq.valor < der.valor
+                elif self.operador == '>=': res = izq.valor >= der.valor
+                elif self.operador == '<=': res = izq.valor <= der.valor
+                return ResultadoObtenido(res, 'bool')
+
+        elif self.operador in ['==', '!=']:
+            if izq.tipo == der.tipo:
+                res = izq.valor == der.valor if self.operador == '==' else izq.valor != der.valor
+                return ResultadoObtenido(res, 'bool')
+
+        # Operadores Lógicos
+        elif self.operador == '&&':
+            if izq.tipo == 'bool' and der.tipo == 'bool':
+                return ResultadoObtenido(izq.valor and der.valor, 'bool')
+        elif self.operador == '||':
+            if izq.tipo == 'bool' and der.tipo == 'bool':
+                return ResultadoObtenido(izq.valor or der.valor, 'bool')
+
+        # Error de tipos incompatibles
+        mensaje = f"Operador '{self.operador}' no soportado entre tipos {izq.tipo} y {der.tipo}."
+        print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\n{mensaje}")
+        return ResultadoObtenido("None", "None")
 
 class DeclaracionVariable(Instruccion):
     def __init__(self, es_mutable, identificador, tipo, expresion, linea, columna):
@@ -136,3 +169,76 @@ class SentenciaIf(Instruccion):
             self.bloque_if.ejecutar(entorno)
         elif self.bloque_else is not None:
             self.bloque_else.ejecutar(entorno)
+            
+class AsignacionVariable(Instruccion):
+    def __init__(self, identificador, expresion, linea, columna):
+        super().__init__(linea, columna)
+        self.identificador = identificador
+        self.expresion = expresion
+
+    def ejecutar(self, entorno):
+        simbolo = entorno.obtener_variable(self.identificador)
+        if simbolo is None:
+            mensaje = f"La variable '{self.identificador}' no ha sido declarada."
+            print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\n{mensaje}")
+            return None
+
+        val_exp = self.expresion.ejecutar(entorno)
+
+        # Verificación de tipos
+        if simbolo.tipo != val_exp.tipo and val_exp.tipo != "None":
+            mensaje = f"No se puede asignar un valor de tipo {val_exp.tipo} a la variable '{self.identificador}' de tipo {simbolo.tipo}."
+            print(f"[Error Semántico] Línea {self.linea}\n{mensaje}")
+            return None
+
+        # Intento de actualización 
+        resultado = entorno.actualizar_variable(self.identificador, val_exp.valor)
+        if resultado == "ERROR_INMUTABLE":
+            mensaje = f"No se puede reasignar la variable inmutable '{self.identificador}'."
+            print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\n{mensaje}")
+
+
+# Excepciones de control de flujo
+class BreakException(Exception):
+    pass
+
+class ContinueException(Exception):
+    pass
+
+class SentenciaBreak(Instruccion):
+    def __init__(self, linea, columna):
+        super().__init__(linea, columna)
+
+    def ejecutar(self, entorno):
+        raise BreakException()
+
+class SentenciaContinue(Instruccion):
+    def __init__(self, linea, columna):
+        super().__init__(linea, columna)
+
+    def ejecutar(self, entorno):
+        raise ContinueException()
+
+# ciclo while
+class CicloWhile(Instruccion):
+    def __init__(self, condicion, bloque, linea, columna):
+        super().__init__(linea, columna)
+        self.condicion = condicion
+        self.bloque = bloque
+
+    def ejecutar(self, entorno):
+        while True:
+            cond = self.condicion.ejecutar(entorno)
+            if cond.tipo != 'bool':
+                print(f"[Error Semántico] Línea {self.linea}: La condición del 'while' debe ser bool.")
+                break
+
+            if cond.valor is True:
+                try:
+                    self.bloque.ejecutar(entorno)
+                except BreakException:
+                    break  # Sale inmediatamente del bucle
+                except ContinueException:
+                    continue  # Pasa a la siguiente iteración
+            else:
+                break

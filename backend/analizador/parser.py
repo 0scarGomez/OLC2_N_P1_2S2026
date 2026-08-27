@@ -3,7 +3,8 @@ import ply.yacc as yacc
 from backend.analizador.lexer import tokens, errores_lexicos
 from backend.analizador.ast_nodes import (
     DeclaracionVariable, Primitivo, OperacionBinaria, 
-    Imprimir, AccesoVariable, Bloque, SentenciaIf
+    Imprimir, AccesoVariable, Bloque, SentenciaIf,
+    AsignacionVariable, CicloWhile, SentenciaBreak, SentenciaContinue
 )
 
 errores_sintacticos = []
@@ -58,7 +59,15 @@ def p_expresion_binaria(p):
                  | expresion MENOS expresion
                  | expresion POR expresion
                  | expresion DIV expresion
-                 | expresion MOD expresion'''
+                 | expresion MOD expresion
+                 | expresion MAYOR_QUE expresion
+                 | expresion MENOR_QUE expresion
+                 | expresion MAYOR_IGUAL expresion
+                 | expresion MENOR_IGUAL expresion
+                 | expresion IGUAL_IGUAL expresion
+                 | expresion DIFERENTE expresion
+                 | expresion AND expresion
+                 | expresion OR expresion'''
     p[0] = OperacionBinaria(p[2], p[1], p[3], p.lineno(2), p.lexpos(2))
 
 # Valores primitivos
@@ -120,4 +129,23 @@ def p_instruccion_if(p):
     else:
         p[0] = SentenciaIf(p[2], p[3], p[5], p.lineno(1), p.lexpos(1))
 
+# regla asignacion de variable
+def p_instruccion_asignacion(p):
+    '''instruccion : ID IGUAL expresion PUNTO_COMA'''
+    p[0] = AsignacionVariable(p[1], p[3], p.lineno(1), p.lexpos(1))
+
+# regla del ciclo while
+def p_instruccion_while(p):
+    '''instruccion : R_WHILE expresion bloque'''
+    p[0] = CicloWhile(p[2], p[3], p.lineno(1), p.lexpos(1))
 parser = yacc.yacc()
+
+def p_instruccion_break(p):
+    '''instruccion : R_BREAK PUNTO_COMA'''
+    p[0] = SentenciaBreak(p.lineno(1), p.lexpos(1))
+
+def p_instruccion_continue(p):
+    '''instruccion : R_CONTINUE PUNTO_COMA'''
+    p[0] = SentenciaContinue(p.lineno(1), p.lexpos(1))
+    
+parser = yacc.yacc(write_tables=False, debug=False)
