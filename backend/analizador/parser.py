@@ -1,7 +1,10 @@
 import ply.yacc as yacc
 
 from backend.analizador.lexer import tokens, errores_lexicos
-from backend.analizador.ast_nodes import DeclaracionVariable, Primitivo, OperacionBinaria, Imprimir, AccesoVariable
+from backend.analizador.ast_nodes import (
+    DeclaracionVariable, Primitivo, OperacionBinaria, 
+    Imprimir, AccesoVariable, Bloque, SentenciaIf
+)
 
 errores_sintacticos = []
 
@@ -65,12 +68,23 @@ def p_expresion_primitiva(p):
                  | CADENA
                  | R_TRUE
                  | R_FALSE'''
-    if isinstance(p[1], int): tipo = 'i32'
-    elif isinstance(p[1], float): tipo = 'f64'
-    elif p[1] in ['true', 'false']: tipo = 'bool'
-    else: tipo = 'String'
+    if isinstance(p[1], int):
+        tipo = 'i32'
+        valor = p[1]
+    elif isinstance(p[1], float):
+        tipo = 'f64'
+        valor = p[1]
+    elif p[1] == 'true':
+        tipo = 'bool'
+        valor = True
+    elif p[1] == 'false':
+        tipo = 'bool'
+        valor = False
+    else:
+        tipo = 'String'
+        valor = p[1]
     
-    p[0] = Primitivo(p[1], tipo, p.lineno(1), p.lexpos(1))
+    p[0] = Primitivo(valor, tipo, p.lineno(1), p.lexpos(1))
 
 def p_expresion_id(p):
     '''expresion : ID'''
@@ -88,5 +102,22 @@ def p_error(p):
         })
     else:
         print("[Error Sintáctico] Fin de archivo inesperado.")
+        
+def p_bloque(p):
+    '''bloque : LLAVE_IZQ instrucciones LLAVE_DER
+              | LLAVE_IZQ LLAVE_DER'''
+    if len(p) == 4:
+        p[0] = Bloque(p[2], p.lineno(1), p.lexpos(1))
+    else:
+        p[0] = Bloque([], p.lineno(1), p.lexpos(1))
+
+# 3. Agregar la regla de Sentencia IF / ELSE
+def p_instruccion_if(p):
+    '''instruccion : R_IF expresion bloque
+                   | R_IF expresion bloque R_ELSE bloque'''
+    if len(p) == 4:
+        p[0] = SentenciaIf(p[2], p[3], None, p.lineno(1), p.lexpos(1))
+    else:
+        p[0] = SentenciaIf(p[2], p[3], p[5], p.lineno(1), p.lexpos(1))
 
 parser = yacc.yacc()

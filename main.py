@@ -3,8 +3,12 @@ from backend.analizador.parser  import parser
 from backend.analizador.tabla_simbolos import Entorno
 
 codigo_prueba = """
-let mut x: i32 = 10 + 5;
-println!(x);
+let mut x: i32 = 10;
+if true {
+    let y: i32 = 20;
+    println!(x);
+    println!(y);
+}
 """
 def probar_interprete():
     print("=== INICIANDO COMPILACIÓN Y EJECUCIÓN ===")

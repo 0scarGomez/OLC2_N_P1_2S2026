@@ -101,3 +101,38 @@ class AccesoVariable(Expresion):
             
         # Si existe, devolvemos su valor y su tipo
         return ResultadoObtenido(simbolo.valor, simbolo.tipo)
+    
+    
+class Bloque(Instruccion):
+    def __init__(self, instrucciones, linea, columna):
+        super().__init__(linea, columna)
+        self.instrucciones = instrucciones
+
+    def ejecutar(self, entorno):
+        # Cada bloque crea un nuevo ámbito/scope hijo
+        from backend.analizador.tabla_simbolos import Entorno
+        nuevo_entorno = Entorno(anterior=entorno, nombre_ambito="Bloque")
+        for inst in self.instrucciones:
+            if inst:
+                inst.ejecutar(nuevo_entorno)
+
+class SentenciaIf(Instruccion):
+    def __init__(self, condicion, bloque_if, bloque_else, linea, columna):
+        super().__init__(linea, columna)
+        self.condicion = condicion
+        self.bloque_if = bloque_if
+        self.bloque_else = bloque_else
+
+    def ejecutar(self, entorno):
+        cond = self.condicion.ejecutar(entorno)
+        
+        # Validar que la condición sea booleana
+        if cond.tipo != 'bool':
+            mensaje = f"La condición del 'if' debe ser de tipo bool, pero se encontró {cond.tipo}."
+            print(f"[Error Semántico] Línea {self.linea}\n{mensaje}")
+            return None
+
+        if cond.valor is True:
+            self.bloque_if.ejecutar(entorno)
+        elif self.bloque_else is not None:
+            self.bloque_else.ejecutar(entorno)
