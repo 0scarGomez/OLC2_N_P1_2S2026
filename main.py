@@ -3,15 +3,16 @@ from backend.analizador.parser  import parser
 from backend.analizador.tabla_simbolos import Entorno
 
 codigo_prueba = """
-let mut i: i32 = 0;
-while i < 5 {
-    if i == 2 {
-        break;
-    }
-    println!(i);
-    i = i + 1;
+let opcion: i32 = 2;
+
+match opcion {
+    1 => { println!(100); },
+    2 => { println!(200); },
+    _ => { println!(0); }
 }
 """
+
+
 def probar_interprete():
     print("=== INICIANDO COMPILACIÓN Y EJECUCIÓN ===")
     
