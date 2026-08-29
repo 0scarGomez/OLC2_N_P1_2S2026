@@ -3,13 +3,8 @@ from backend.analizador.parser  import parser
 from backend.analizador.tabla_simbolos import Entorno
 
 codigo_prueba = """
-let opcion: i32 = 2;
-
-match opcion {
-    1 => { println!(100); },
-    2 => { println!(200); },
-    _ => { println!(0); }
-}
+let letra: char = 'X';
+println!(letra);
 """
 
 

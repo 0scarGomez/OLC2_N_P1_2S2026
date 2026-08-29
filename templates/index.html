@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OxigenScript - Intérprete Rust</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Graphviz / D3JS para renderizar el Árbol AST -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm@2.20.0/dist/index.min.js" type="application/javascript/wasm"></script>
+    <script src="https://unpkg.com/d3-graphviz@5.6.0/build/d3-graphviz.js"></script>
+
+    <style>
+        :root {
+            --bg-main: #f4f5f7;
+            --border-color: #d1d5db;
+            --console-bg: #fafafa;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 12px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .top-navbar {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #6c757d;
+        }
+
+        .brand-title {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: #212529;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .brand-subtitle {
+            font-size: 0.78rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-custom {
+            border: 1px solid var(--border-color);
+            background: #fff;
+            color: #374151;
+            font-weight: 500;
+            padding: 5px 18px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-custom:hover {
+            background: #f3f4f6;
+        }
+
+        .btn-ejecutar {
+            border-color: #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .btn-ejecutar:hover {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+            height: calc(100vh - 85px);
+        }
+
+        .editor-container {
+            flex: 6;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .line-numbers {
+            width: 40px;
+            background: #f9fafb;
+            border-right: 1px solid var(--border-color);
+            padding: 10px 0;
+            text-align: center;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            color: #9ca3af;
+            user-select: none;
+            line-height: 1.5;
+        }
+
+        .code-textarea {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 13.5px;
+            line-height: 1.5;
+            resize: none;
+            white-space: pre;
+            overflow-x: auto;
+            color: #1f2937;
+        }
+
+        .bottom-container {
+            flex: 4;
+            display: flex;
+            gap: 10px;
+            min-height: 0;
+        }
+
+        .console-section {
+            flex: 1;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        .section-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .console-output {
+            flex: 1;
+            background: var(--console-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 12.5px;
+            color: #111827;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .tabs-section {
+            flex: 1.1;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #4b5563;
+            font-weight: 500;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 6px 20px;
+            font-size: 0.9rem;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+            background: transparent;
+            font-weight: 600;
+        }
+
+        .tab-content-box {
+            flex: 1;
+            border: 1px dashed #d1d5db;
+            border-radius: 6px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #fafafa;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="brand-section">
+            <div class="brand-logo">☒</div>
+            <div>
+                <h1 class="brand-title">OxigenScript</h1>
+                <p class="brand-subtitle">Intérprete de un lenguaje inspirado en Rust</p>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-custom" onclick="nuevoArchivo()">Nuevo</button>
+            <button class="btn btn-custom" onclick="document.getElementById('fileInput').click()">Abrir</button>
+            <input type="file" id="fileInput" style="display: none;" onchange="abrirArchivo(event)">
+            <button class="btn btn-custom" onclick="guardarArchivo()">Guardar</button>
+            <button class="btn btn-custom btn-ejecutar" onclick="ejecutarCodigo()">Ejecutar</button>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <div class="editor-container">
+            <div class="line-numbers" id="lineNumbers">1</div>
+            <textarea id="codeEditor" class="code-textarea" spellcheck="false" oninput="actualizarLineas()" onscroll="sincronizarScroll()">let mut x: i32 = 10;
+let y: i32 = 20;
+
+if x < y {
+    x = x + y;
+} else {
+    x = x - y;
+}
+
+while x > 0 {
+    x = x - 1;
+}
+
+println!(x);</textarea>
+        </div>
+
+        <div class="bottom-container">
+            <div class="console-section">
+                <div class="section-title">Consola de salida</div>
+                <div id="consoleOutput" class="console-output">> Esperando ejecución...</div>
+            </div>
+
+            <div class="tabs-section">
+                <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active" id="errores-tab" data-bs-toggle="tab" data-bs-target="#errores" type="button">Errores</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="simbolos-tab" data-bs-toggle="tab" data-bs-target="#simbolos" type="button">Tabla de símbolos</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="ast-tab" data-bs-toggle="tab" data-bs-target="#ast" type="button">AST</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content h-100" id="reportTabsContent">
+                    <div class="tab-pane fade show active tab-content-box" id="errores">
+                        <div>
+                            <div class="fw-bold text-secondary">Errores</div>
+                            <div class="small text-muted">Aquí se mostrarán los errores del programa.</div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade tab-content-box" id="simbolos">
+                        <div>
+                            <div class="fw-bold text-secondary">Tabla de símbolos</div>
+                            <div class="small text-muted">Aquí se mostrará la información de las variables y funciones.</div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade tab-content-box" id="ast">
+                        <div>
+                            <div class="fw-bold text-secondary">AST</div>
+                            <div class="small text-muted">Aquí se mostrará el árbol de sintaxis abstracta del programa.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function actualizarLineas() {
+            const editor = document.getElementById('codeEditor');
+            const lineNumbers = document.getElementById('lineNumbers');
+            const lineas = editor.value.split('\n').length;
+            lineNumbers.innerHTML = Array.from({ length: lineas }, (_, i) => i + 1).join('<br>');
+        }
+
+        function sincronizarScroll() {
+            const editor = document.getElementById('codeEditor');
+            const lineNumbers = document.getElementById('lineNumbers');
+            lineNumbers.scrollTop = editor.scrollTop;
+        }
+
+        function nuevoArchivo() {
+            document.getElementById('codeEditor').value = '';
+            actualizarLineas();
+        }
+
+        function abrirArchivo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('codeEditor').value = e.target.result;
+                    actualizarLineas();
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function guardarArchivo() {
+            const code = document.getElementById('codeEditor').value;
+            const blob = new Blob([code], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'codigo.rs';
+            a.click();
+        }
+
+        async function ejecutarCodigo() {
+            const codigo = document.getElementById('codeEditor').value;
+            const consola = document.getElementById('consoleOutput');
+            
+            const tabErrores = document.getElementById('errores');
+            const tabSimbolos = document.getElementById('simbolos');
+            const tabAst = document.getElementById('ast');
+
+            const tiempoInicio = performance.now();
+            consola.innerText = "> Ejecutando OxigenScript...\n";
+
+            try {
+                const response = await fetch('/ejecutar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codigo: codigo })
+                });
+
+                const data = await response.json();
+                const tiempoFin = performance.now();
+                const duracion = ((tiempoFin - tiempoInicio) / 1000).toFixed(4);
+
+                if (data.exito) {
+                    consola.innerText = `> Ejecutando OxigenScript...\nCompilación exitosa.\n--- Programa en ejecución ---\n${data.consola}\n--- Fin de la ejecución ---\nTiempo de ejecución: ${duracion}s`;
+                } else {
+                    consola.innerText = `> Ejecutando OxigenScript...\nError detectado:\n${data.consola}`;
+                }
+
+                // 1. Renderizar Errores
+                if (data.errores && data.errores.length > 0) {
+                    let htmlErrores = `<table class="table table-sm table-striped w-100"><thead><tr><th>Tipo</th><th>Descripción</th><th>Línea</th><th>Columna</th></tr></thead><tbody>`;
+                    data.errores.forEach(err => {
+                        htmlErrores += `<tr><td class="text-danger fw-bold">${err.tipo}</td><td>${err.descripcion}</td><td>${err.linea}</td><td>${err.columna}</td></tr>`;
+                    });
+                    htmlErrores += `</tbody></table>`;
+                    tabErrores.innerHTML = htmlErrores;
+                } else {
+                    tabErrores.innerHTML = `<div class="text-success p-3">✓ No se detectaron errores léxicos, sintácticos ni semánticos.</div>`;
+                }
+
+                // 2. Renderizar Tabla de Símbolos
+                if (data.simbolos && data.simbolos.length > 0) {
+                    let htmlSimbolos = `<table class="table table-sm table-hover w-100"><thead><tr><th>ID</th><th>Tipo</th><th>Valor</th><th>Mutable</th></tr></thead><tbody>`;
+                    data.simbolos.forEach(sim => {
+                        htmlSimbolos += `<tr><td class="fw-bold">${sim.id}</td><td><span class="badge bg-secondary">${sim.tipo}</span></td><td>${sim.valor}</td><td>${sim.mutable}</td></tr>`;
+                    });
+                    htmlSimbolos += `</tbody></table>`;
+                    tabSimbolos.innerHTML = htmlSimbolos;
+                } else {
+                    tabSimbolos.innerHTML = `<div class="text-muted p-3">La tabla de símbolos está vacía.</div>`;
+                }
+
+                // 3. Renderizar Gráfica AST
+                if (data.ast_dot) {
+                    tabAst.innerHTML = `<div id="graph" style="width: 100%; height: 100%; overflow: auto;"></div>`;
+                    d3.select("#graph").graphviz()
+                        .width(tabAst.clientWidth - 20)
+                        .height(200)
+                        .fit(true)
+                        .renderDot(data.ast_dot);
+                } else {
+                    tabAst.innerHTML = `<div class="text-muted p-3">No hay árbol AST disponible.</div>`;
+                }
+
+            } catch (error) {
+                consola.innerText = "[Error de Conexión]: " + error;
+            }
+        }
+
+        actualizarLineas();
+    </script>
+</body>
+</html>
