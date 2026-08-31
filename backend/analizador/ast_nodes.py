@@ -1,3 +1,5 @@
+import random
+
 class ResultadoObtenido:
     def __init__(self, valor, tipo):
         self.valor = valor
@@ -31,47 +33,34 @@ class OperacionBinaria(Expresion):
         self.der = der
 
     def ejecutar(self, entorno):
-        # 1. Ejecutamos SIEMPRE el lado izquierdo primero
         izq = self.izq.ejecutar(entorno)
-        
         if izq is None or izq.tipo == "None":
             return ResultadoObtenido(None, "None")
 
-        # ==========================================
-        # LÓGICA DE CORTOCIRCUITO (&&, ||)
-        # ==========================================
         if self.operador == '&&':
             if izq.tipo != 'bool':
-                print(f"[Error Semántico] Línea {self.linea}: Operador '&&' requiere bool, encontrado {izq.tipo}.")
+                entorno.registrar_error("Semántico", f"Operador '&&' requiere bool, encontrado {izq.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
             if not izq.valor:
-                # Si el izquierdo es Falso, retornamos Falso de inmediato (No evaluamos la derecha)
                 return ResultadoObtenido(False, 'bool')
-                
             der = self.der.ejecutar(entorno)
             if der is None or der.tipo != 'bool':
-                print(f"[Error Semántico] Línea {self.linea}: Operador '&&' requiere bool.")
+                entorno.registrar_error("Semántico", "Operador '&&' requiere bool.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
             return ResultadoObtenido(der.valor, 'bool')
 
         elif self.operador == '||':
             if izq.tipo != 'bool':
-                print(f"[Error Semántico] Línea {self.linea}: Operador '||' requiere bool, encontrado {izq.tipo}.")
+                entorno.registrar_error("Semántico", f"Operador '||' requiere bool, encontrado {izq.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
             if izq.valor:
-                # Si el izquierdo es Verdadero, retornamos Verdadero de inmediato (No evaluamos la derecha)
                 return ResultadoObtenido(True, 'bool')
-                
             der = self.der.ejecutar(entorno)
             if der is None or der.tipo != 'bool':
-                print(f"[Error Semántico] Línea {self.linea}: Operador '||' requiere bool.")
+                entorno.registrar_error("Semántico", "Operador '||' requiere bool.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
             return ResultadoObtenido(der.valor, 'bool')
 
-        # ==========================================
-        # OTROS OPERADORES (Aritméticos y Relacionales)
-        # ==========================================
-        # Para el resto de operadores matemáticos, SÍ es obligatorio evaluar el lado derecho
         der = self.der.ejecutar(entorno)
         if der is None or der.tipo == "None":
             return ResultadoObtenido(None, "None")
@@ -81,7 +70,6 @@ class OperacionBinaria(Expresion):
         ambos_num = es_num_izq and es_num_der
         tipo_resultante = 'f64' if izq.tipo == 'f64' or der.tipo == 'f64' else 'i32'
 
-        # -- Aritméticos --
         if self.operador == '+':
             if ambos_num:
                 val = izq.valor + der.valor
@@ -89,7 +77,7 @@ class OperacionBinaria(Expresion):
             elif izq.tipo == 'String' and der.tipo == 'String':
                 return ResultadoObtenido(str(izq.valor) + str(der.valor), 'String')
             else:
-                print(f"[Error Semántico] Línea {self.linea}\nNo es posible aplicar '+' entre {izq.tipo} y {der.tipo}.")
+                entorno.registrar_error("Semántico", f"No es posible aplicar '+' entre {izq.tipo} y {der.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
 
         elif self.operador == '-':
@@ -97,7 +85,7 @@ class OperacionBinaria(Expresion):
                 val = izq.valor - der.valor
                 return ResultadoObtenido(float(val) if tipo_resultante == 'f64' else int(val), tipo_resultante)
             else:
-                print(f"[Error Semántico] Línea {self.linea}\nNo es posible aplicar '-' entre {izq.tipo} y {der.tipo}.")
+                entorno.registrar_error("Semántico", f"No es posible aplicar '-' entre {izq.tipo} y {der.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
 
         elif self.operador == '*':
@@ -109,32 +97,31 @@ class OperacionBinaria(Expresion):
             elif izq.tipo == 'i32' and der.tipo == 'String':
                 return ResultadoObtenido(str(der.valor) * int(izq.valor), 'String')
             else:
-                print(f"[Error Semántico] Línea {self.linea}\nNo es posible aplicar '*' entre {izq.tipo} y {der.tipo}.")
+                entorno.registrar_error("Semántico", f"No es posible aplicar '*' entre {izq.tipo} y {der.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
 
         elif self.operador == '/':
             if ambos_num:
                 if der.valor == 0:
-                    print(f"[Error Semántico] Línea {self.linea}\nDivisión entre cero.")
+                    entorno.registrar_error("Semántico", "División entre cero.", self.linea, self.columna)
                     return ResultadoObtenido(None, "None")
                 val = izq.valor / der.valor
                 return ResultadoObtenido(float(val) if tipo_resultante == 'f64' else int(val), tipo_resultante)
             else:
-                print(f"[Error Semántico] Línea {self.linea}\nNo es posible aplicar '/' entre {izq.tipo} y {der.tipo}.")
+                entorno.registrar_error("Semántico", f"No es posible aplicar '/' entre {izq.tipo} y {der.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
 
         elif self.operador == '%':
             if ambos_num:
                 if der.valor == 0:
-                    print(f"[Error Semántico] Línea {self.linea}\nMódulo entre cero.")
+                    entorno.registrar_error("Semántico", "Módulo entre cero.", self.linea, self.columna)
                     return ResultadoObtenido(None, "None")
                 val = izq.valor % der.valor
                 return ResultadoObtenido(float(val) if tipo_resultante == 'f64' else int(val), tipo_resultante)
             else:
-                print(f"[Error Semántico] Línea {self.linea}\nNo es posible aplicar '%' entre {izq.tipo} y {der.tipo}.")
+                entorno.registrar_error("Semántico", f"No es posible aplicar '%' entre {izq.tipo} y {der.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
 
-        # -- Relacionales --
         elif self.operador in ['==', '!=', '>', '<', '>=', '<=']:
             val_izq = izq.valor
             val_der = der.valor
@@ -162,10 +149,10 @@ class OperacionBinaria(Expresion):
                 elif self.operador == '<=': res = val_izq <= val_der
                 return ResultadoObtenido(res, 'bool')
             else:
-                print(f"[Error Semántico] Línea {self.linea}\nOperador '{self.operador}' no soportado entre {izq.tipo} y {der.tipo}.")
+                entorno.registrar_error("Semántico", f"Operador '{self.operador}' no soportado entre {izq.tipo} y {der.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
 
-        print(f"[Error Semántico] Línea {self.linea}\nOperador '{self.operador}' desconocido.")
+        entorno.registrar_error("Semántico", f"Operador '{self.operador}' desconocido.", self.linea, self.columna)
         return ResultadoObtenido(None, "None")
 
 class OperacionUnaria(Expresion):
@@ -176,7 +163,6 @@ class OperacionUnaria(Expresion):
 
     def ejecutar(self, entorno):
         op = self.operando.ejecutar(entorno)
-        
         if op is None or op.tipo == "None":
             return ResultadoObtenido(None, "None")
 
@@ -185,18 +171,17 @@ class OperacionUnaria(Expresion):
                 val = -op.valor
                 return ResultadoObtenido(float(val) if op.tipo == 'f64' else int(val), op.tipo)
             else:
-                print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\nNo es posible aplicar el operador unario '-' al tipo {op.tipo}.")
+                entorno.registrar_error("Semántico", f"No es posible aplicar '-' al tipo {op.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
-                
         elif self.operador == '!':
             if op.tipo == 'bool':
                 return ResultadoObtenido(not op.valor, 'bool')
             else:
-                print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\nNo es posible aplicar el operador unario '!' al tipo {op.tipo}.")
+                entorno.registrar_error("Semántico", f"No es posible aplicar '!' al tipo {op.tipo}.", self.linea, self.columna)
                 return ResultadoObtenido(None, "None")
 
         return ResultadoObtenido(None, "None")
-    
+
 class DeclaracionVariable(Instruccion):
     def __init__(self, es_mutable, identificador, tipo, expresion, linea, columna):
         super().__init__(linea, columna)
@@ -206,42 +191,24 @@ class DeclaracionVariable(Instruccion):
         self.expresion = expresion
 
     def ejecutar(self, entorno):
-        # Si no hay expresión de inicialización, se asigna el valor por defecto
         if self.expresion is None:
-            if self.tipo == 'i32':
-                valor_final = 0
-            elif self.tipo == 'f64':
-                valor_final = 0.0
-            elif self.tipo == 'bool':
-                valor_final = False
-            elif self.tipo == 'String':
-                valor_final = ""
-            else:
-                valor_final = None # Para char o arreglos sin defecto explícito
-            
+            defaults = {'i32': 0, 'f64': 0.0, 'bool': False, 'String': ""}
+            valor_final = defaults.get(self.tipo, None)
             tipo_variable = self.tipo
         else:
             resultado_exp = self.expresion.ejecutar(entorno)
-            if resultado_exp is None: 
+            if resultado_exp is None or resultado_exp.tipo == "None": 
                 return None
-            
-            # Inferencia de tipo si no vino explícito
             tipo_variable = self.tipo if self.tipo is not None else resultado_exp.tipo
-
-            if self.tipo is not None and self.tipo != resultado_exp.tipo and resultado_exp.tipo != "None":
-                mensaje = f"No es posible asignar un valor de tipo {resultado_exp.tipo} a una variable de tipo {self.tipo}."
-                print(f"[Error Semántico] Línea {self.linea}\n{mensaje}")
+            if self.tipo is not None and self.tipo != resultado_exp.tipo:
+                entorno.registrar_error("Semántico", f"No es posible asignar {resultado_exp.tipo} a {self.tipo}.", self.linea, self.columna)
                 return None
-                
             valor_final = resultado_exp.valor
 
         from backend.analizador.tabla_simbolos import Simbolo
-        nuevo_simbolo = Simbolo(
-            self.identificador, tipo_variable, valor_final, 
-            self.es_mutable, entorno.nombre_ambito, self.linea, self.columna
-        )
+        nuevo_simbolo = Simbolo(self.identificador, tipo_variable, valor_final, self.es_mutable, entorno.nombre_ambito, self.linea, self.columna)
         entorno.guardar_variable(self.identificador, nuevo_simbolo)
-        
+
 class Imprimir(Instruccion):
     def __init__(self, argumentos, linea, columna):
         super().__init__(linea, columna)
@@ -253,7 +220,12 @@ class Imprimir(Instruccion):
         return str(val)
 
     def ejecutar(self, entorno):
-        val_args = [self.formatear_valor(arg.ejecutar(entorno).valor) for arg in self.argumentos]
+        val_args = []
+        for arg in self.argumentos:
+            res = arg.ejecutar(entorno)
+            if res is not None:
+                val_args.append(self.formatear_valor(res.valor))
+        
         if not val_args:
             print(">")
             return
@@ -267,7 +239,7 @@ class Imprimir(Instruccion):
                 else:
                     formato = formato.replace("{}", val, 1)
             print(f"> {formato}")
-            
+
 class AccesoVariable(Expresion):
     def __init__(self, identificador, linea, columna):
         super().__init__(linea, columna)
@@ -276,11 +248,10 @@ class AccesoVariable(Expresion):
     def ejecutar(self, entorno):
         simbolo = entorno.obtener_variable(self.identificador)
         if simbolo is None:
-            mensaje = f"La variable '{self.identificador}' no ha sido declarada."
-            print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\n{mensaje}")
+            entorno.registrar_error("Semántico", f"La variable '{self.identificador}' no ha sido declarada.", self.linea, self.columna)
             return ResultadoObtenido("None", "None")
         return ResultadoObtenido(simbolo.valor, simbolo.tipo)
-    
+
 class Bloque(Instruccion):
     def __init__(self, instrucciones, linea, columna):
         super().__init__(linea, columna)
@@ -302,16 +273,18 @@ class SentenciaIf(Instruccion):
 
     def ejecutar(self, entorno):
         cond = self.condicion.ejecutar(entorno)
+        if cond is None or cond.tipo == "None":
+            return None
+
         if cond.tipo != 'bool':
-            mensaje = f"La condición del 'if' debe ser de tipo bool, pero se encontró {cond.tipo}."
-            print(f"[Error Semántico] Línea {self.linea}\n{mensaje}")
+            entorno.registrar_error("Semántico", f"La condición del 'if' debe ser bool, encontrado {cond.tipo}.", self.linea, self.columna)
             return None
 
         if cond.valor is True:
             self.bloque_if.ejecutar(entorno)
         elif self.bloque_else is not None:
             self.bloque_else.ejecutar(entorno)
-            
+
 class AsignacionVariable(Instruccion):
     def __init__(self, identificador, expresion, linea, columna):
         super().__init__(linea, columna)
@@ -321,21 +294,20 @@ class AsignacionVariable(Instruccion):
     def ejecutar(self, entorno):
         simbolo = entorno.obtener_variable(self.identificador)
         if simbolo is None:
-            mensaje = f"La variable '{self.identificador}' no ha sido declarada."
-            print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\n{mensaje}")
+            entorno.registrar_error("Semántico", f"La variable '{self.identificador}' no ha sido declarada.", self.linea, self.columna)
             return None
 
         val_exp = self.expresion.ejecutar(entorno)
+        if val_exp is None or val_exp.tipo == "None":
+            return None
 
-        if simbolo.tipo != val_exp.tipo and val_exp.tipo != "None":
-            mensaje = f"No se puede asignar un valor de tipo {val_exp.tipo} a la variable '{self.identificador}' de tipo {simbolo.tipo}."
-            print(f"[Error Semántico] Línea {self.linea}\n{mensaje}")
+        if simbolo.tipo != val_exp.tipo:
+            entorno.registrar_error("Semántico", f"No se puede asignar {val_exp.tipo} a {self.identificador} ({simbolo.tipo}).", self.linea, self.columna)
             return None
 
         resultado = entorno.actualizar_variable(self.identificador, val_exp.valor)
         if resultado == "ERROR_INMUTABLE":
-            mensaje = f"No se puede reasignar la variable inmutable '{self.identificador}'."
-            print(f"[Error Semántico] Línea {self.linea}, Columna {self.columna}\n{mensaje}")
+            entorno.registrar_error("Semántico", f"No se puede reasignar variable inmutable '{self.identificador}'.", self.linea, self.columna)
 
 class BreakException(Exception):
     def __init__(self, etiqueta=None):
@@ -370,10 +342,8 @@ class CicloWhile(Instruccion):
     def ejecutar(self, entorno):
         while True:
             cond = self.condicion.ejecutar(entorno)
-            if cond.tipo != 'bool':
-                print(f"[Error Semántico] Línea {self.linea}: La condición del 'while' debe ser bool.")
+            if cond is None or cond.tipo != 'bool':
                 break
-
             if cond.valor is True:
                 try:
                     self.bloque.ejecutar(entorno)
@@ -383,7 +353,7 @@ class CicloWhile(Instruccion):
                     continue
             else:
                 break
-            
+
 class ReturnException(Exception):
     def __init__(self, resultado):
         self.resultado = resultado
@@ -396,7 +366,7 @@ class SentenciaReturn(Instruccion):
     def ejecutar(self, entorno):
         val = self.expresion.ejecutar(entorno) if self.expresion else ResultadoObtenido(None, "void")
         raise ReturnException(val)
-    
+
 class DeclaracionFuncion(Instruccion):
     def __init__(self, nombre, parametros, tipo_retorno, bloque, linea, columna):
         super().__init__(linea, columna)
@@ -407,9 +377,7 @@ class DeclaracionFuncion(Instruccion):
 
     def ejecutar(self, entorno):
         from backend.analizador.tabla_simbolos import Simbolo
-        simbolo_fn = Simbolo(
-            self.nombre, "Funcion", self, False, entorno.nombre_ambito, self.linea, self.columna
-        )
+        simbolo_fn = Simbolo(self.nombre, "Funcion", self, False, entorno.nombre_ambito, self.linea, self.columna)
         entorno.guardar_variable(self.nombre, simbolo_fn)
 
 class LlamadaFuncion(Expresion):
@@ -419,15 +387,23 @@ class LlamadaFuncion(Expresion):
         self.argumentos = argumentos
 
     def ejecutar(self, entorno):
+        if self.nombre == 'typeof' and len(self.argumentos) == 1:
+            res = self.argumentos[0].ejecutar(entorno)
+            return ResultadoObtenido(res.tipo, "String")
+
+        if self.nombre == 'random' and len(self.argumentos) == 2:
+            min_val = self.argumentos[0].ejecutar(entorno).valor
+            max_val = self.argumentos[1].ejecutar(entorno).valor
+            return ResultadoObtenido(random.randint(int(min_val), int(max_val)), "i32")
+
         simbolo = entorno.obtener_variable(self.nombre)
         if not simbolo or simbolo.tipo != "Funcion":
-            print(f"[Error Semántico] Línea {self.linea}: La función '{self.nombre}' no está definida.")
+            entorno.registrar_error("Semántico", f"La función '{self.nombre}' no está definida.", self.linea, self.columna)
             return ResultadoObtenido("None", "None")
 
         simbolo_fn = simbolo.valor
-
         if len(self.argumentos) != len(simbolo_fn.parametros):
-            print(f"[Error Semántico] Línea {self.linea}: Esperados {len(simbolo_fn.parametros)} argumentos, pero se recibieron {len(self.argumentos)}.")
+            entorno.registrar_error("Semántico", f"Esperados {len(simbolo_fn.parametros)} argumentos en '{self.nombre}'.", self.linea, self.columna)
             return ResultadoObtenido("None", "None")
 
         from backend.analizador.tabla_simbolos import Entorno, Simbolo
@@ -435,10 +411,11 @@ class LlamadaFuncion(Expresion):
 
         for (param_id, param_tipo), arg_exp in zip(simbolo_fn.parametros, self.argumentos):
             arg_val = arg_exp.ejecutar(entorno)
-            if arg_val.tipo != param_tipo:
-                print(f"[Error Semántico] Línea {self.linea}: El argumento '{param_id}' debe ser de tipo {param_tipo}.")
+            if arg_val is None or arg_val.tipo == "None":
                 return ResultadoObtenido("None", "None")
-            
+            if arg_val.tipo != param_tipo:
+                entorno.registrar_error("Semántico", f"Argumento '{param_id}' debe ser de tipo {param_tipo}.", self.linea, self.columna)
+                return ResultadoObtenido("None", "None")
             param_simbolo = Simbolo(param_id, param_tipo, arg_val.valor, True, entorno_local.nombre_ambito, self.linea, self.columna)
             entorno_local.guardar_variable(param_id, param_simbolo)
 
@@ -446,12 +423,12 @@ class LlamadaFuncion(Expresion):
             simbolo_fn.bloque.ejecutar(entorno_local)
         except ReturnException as ret:
             if simbolo_fn.tipo_retorno and ret.resultado.tipo != simbolo_fn.tipo_retorno:
-                print(f"[Error Semántico] Línea {self.linea}: Tipo de retorno incorrecto en '{self.nombre}'.")
+                entorno.registrar_error("Semántico", f"Tipo de retorno incorrecto en '{self.nombre}'.", self.linea, self.columna)
                 return ResultadoObtenido("None", "None")
             return ret.resultado
 
         return ResultadoObtenido(None, "void")
-    
+
 class ArregloLiteral(Expresion):
     def __init__(self, elementos, linea, columna):
         super().__init__(linea, columna)
@@ -462,10 +439,11 @@ class ArregloLiteral(Expresion):
         tipo_elem = None
         for elem in self.elementos:
             res = elem.ejecutar(entorno)
+            if res is None or res.tipo == "None": return ResultadoObtenido("None", "None")
             if tipo_elem is None:
                 tipo_elem = res.tipo
             elif tipo_elem != res.tipo:
-                print(f"[Error Semántico] Línea {self.linea}: Elementos del arreglo con tipos inconsistentes.")
+                entorno.registrar_error("Semántico", "Tipos inconsistentes en arreglo.", self.linea, self.columna)
                 return ResultadoObtenido("None", "None")
             valores.append(res.valor)
         return ResultadoObtenido(valores, f"[{tipo_elem if tipo_elem else 'any'}]")
@@ -480,12 +458,12 @@ class AccesoArreglo(Expresion):
         arr_res = self.arreglo.ejecutar(entorno)
         idx_res = self.indice.ejecutar(entorno)
 
-        if idx_res.tipo != 'i32':
-            print(f"[Error Semántico] Línea {self.linea}: El índice debe ser de tipo i32.")
+        if idx_res is None or idx_res.tipo != 'i32':
+            entorno.registrar_error("Semántico", "El índice debe ser i32.", self.linea, self.columna)
             return ResultadoObtenido("None", "None")
 
         if not isinstance(arr_res.valor, list):
-            print(f"[Error Semántico] Línea {self.linea}: La expresión no es un arreglo.")
+            entorno.registrar_error("Semántico", "La expresión no es un arreglo.", self.linea, self.columna)
             return ResultadoObtenido("None", "None")
 
         try:
@@ -493,7 +471,7 @@ class AccesoArreglo(Expresion):
             tipo_interno = arr_res.tipo.strip('[]')
             return ResultadoObtenido(val, tipo_interno)
         except IndexError:
-            print(f"[Error Semántico] Línea {self.linea}: Índice fuera de rango ({idx_res.valor}).")
+            entorno.registrar_error("Semántico", f"Índice fuera de rango ({idx_res.valor}).", self.linea, self.columna)
             return ResultadoObtenido("None", "None")
 
 class AsignacionArreglo(Instruccion):
@@ -505,30 +483,18 @@ class AsignacionArreglo(Instruccion):
 
     def ejecutar(self, entorno):
         simbolo = entorno.obtener_variable(self.identificador)
-        if not simbolo:
-            print(f"[Error Semántico] Línea {self.linea}: Variable '{self.identificador}' no declarada.")
+        if not simbolo or not isinstance(simbolo.valor, list):
+            entorno.registrar_error("Semántico", f"'{self.identificador}' no es un arreglo válido.", self.linea, self.columna)
             return
 
         idx_res = self.indice.ejecutar(entorno)
         val_res = self.expresion.ejecutar(entorno)
-
-        if idx_res.tipo != 'i32':
-            print(f"[Error Semántico] Línea {self.linea}: El índice debe ser de tipo i32.")
-            return
-
-        if not isinstance(simbolo.valor, list):
-            print(f"[Error Semántico] Línea {self.linea}: Variable '{self.identificador}' no es un arreglo.")
-            return
-
-        tipo_interno = simbolo.tipo.strip('[]')
-        if val_res.tipo != tipo_interno:
-            print(f"[Error Semántico] Línea {self.linea}: Tipo {val_res.tipo} incompatible con el arreglo de tipo {tipo_interno}.")
-            return
+        if idx_res is None or val_res is None or idx_res.tipo != 'i32': return
 
         try:
             simbolo.valor[idx_res.valor] = val_res.valor
         except IndexError:
-            print(f"[Error Semántico] Línea {self.linea}: Índice fuera de rango ({idx_res.valor}).")
+            entorno.registrar_error("Semántico", f"Índice fuera de rango ({idx_res.valor}).", self.linea, self.columna)
 
 class DeclaracionStruct(Instruccion):
     def __init__(self, nombre, campos, linea, columna):
@@ -537,39 +503,27 @@ class DeclaracionStruct(Instruccion):
         self.campos = campos
 
     def ejecutar(self, entorno):
-        from backend.analizador.tabla_simbolos import Simbolo
-        simbolo = Simbolo(self.nombre, "StructDef", self.campos, False, entorno.nombre_ambito, self.linea, self.columna)
-        entorno.guardar_variable(self.nombre, simbolo)
+        entorno.guardar_variable(self.nombre, self.campos)
 
 class InstanciacionStruct(Expresion):
-    def __init__(self, nombre_struct, valores_campos, linea, columna):
+    def __init__(self, nombre, campos_asignados, linea, columna):
         super().__init__(linea, columna)
-        self.nombre_struct = nombre_struct
-        self.valores_campos = valores_campos
+        self.nombre = nombre
+        self.campos_asignados = campos_asignados
 
     def ejecutar(self, entorno):
-        struct_def = entorno.obtener_variable(self.nombre_struct)
-        if not struct_def or struct_def.tipo != "StructDef":
-            print(f"[Error Semántico] Línea {self.linea}: El struct '{self.nombre_struct}' no ha sido definido.")
+        struct_def = entorno.obtener_variable(self.nombre)
+        if struct_def is None:
+            entorno.registrar_error("Semántico", f"El struct '{self.nombre}' no existe.", self.linea, self.columna)
             return ResultadoObtenido("None", "None")
 
-        campos_def = struct_def.valor
+        campos_definidos = struct_def.valor if hasattr(struct_def, 'valor') else struct_def
         instancia_valores = {}
+        for nombre_campo, expresion in self.campos_asignados.items():
+            if nombre_campo in campos_definidos:
+                instancia_valores[nombre_campo] = expresion.ejecutar(entorno)
 
-        for campo_nom, exp in self.valores_campos.items():
-            if campo_nom not in campos_def:
-                print(f"[Error Semántico] Línea {self.linea}: El campo '{campo_nom}' no existe en '{self.nombre_struct}'.")
-                return ResultadoObtenido("None", "None")
-
-            res = exp.ejecutar(entorno)
-            tipo_esperado = campos_def[campo_nom]
-            if res.tipo != tipo_esperado:
-                print(f"[Error Semántico] Línea {self.linea}: Tipo incorrecto para '{campo_nom}'. Esperado {tipo_esperado}, obtenido {res.tipo}.")
-                return ResultadoObtenido("None", "None")
-
-            instancia_valores[campo_nom] = res.valor
-
-        return ResultadoObtenido(instancia_valores, self.nombre_struct)
+        return ResultadoObtenido(instancia_valores, self.nombre)
 
 class AccesoAtributo(Expresion):
     def __init__(self, expresion, atributo, linea, columna):
@@ -578,16 +532,13 @@ class AccesoAtributo(Expresion):
         self.atributo = atributo
 
     def ejecutar(self, entorno):
-        obj_res = self.expresion.ejecutar(entorno)
-        if not isinstance(obj_res.valor, dict):
-            print(f"[Error Semántico] Línea {self.linea}: Intentando acceder a atributo de un elemento no struct.")
-            return ResultadoObtenido("None", "None")
-
-        if self.atributo not in obj_res.valor:
-            print(f"[Error Semántico] Línea {self.linea}: El atributo '{self.atributo}' no existe en el struct.")
-            return ResultadoObtenido("None", "None")
-
-        return ResultadoObtenido(obj_res.valor[self.atributo], "any")
+        res_obj = self.expresion.ejecutar(entorno)
+        if res_obj and isinstance(res_obj.valor, dict) and self.atributo in res_obj.valor:
+            res_campo = res_obj.valor[self.atributo]
+            return ResultadoObtenido(res_campo.valor, res_campo.tipo)
+        
+        entorno.registrar_error("Semántico", f"Atributo '{self.atributo}' inválido.", self.linea, self.columna)
+        return ResultadoObtenido("None", "None")
 
 class AsignacionAtributo(Instruccion):
     def __init__(self, identificador, atributo, expresion, linea, columna):
@@ -598,32 +549,21 @@ class AsignacionAtributo(Instruccion):
 
     def ejecutar(self, entorno):
         simbolo = entorno.obtener_variable(self.identificador)
-        if not simbolo:
-            print(f"[Error Semántico] Línea {self.linea}: Variable '{self.identificador}' no declarada.")
-            return
-
-        if not isinstance(simbolo.valor, dict):
-            print(f"[Error Semántico] Línea {self.linea}: '{self.identificador}' no es un struct.")
-            return
-
-        if self.atributo not in simbolo.valor:
-            print(f"[Error Semántico] Línea {self.linea}: Atributo '{self.atributo}' no existe.")
-            return
-
-        val_res = self.expresion.ejecutar(entorno)
-        simbolo.valor[self.atributo] = val_res.valor
+        if simbolo and isinstance(simbolo.valor, dict) and self.atributo in simbolo.valor:
+            val_res = self.expresion.ejecutar(entorno)
+            if val_res and val_res.tipo != "None":
+                simbolo.valor[self.atributo] = val_res.valor
 
 class MetodoLen(Expresion):
-    def __init__(self, expresion, linea, columna):
+    def __init__(self, objeto, linea, columna):
         super().__init__(linea, columna)
-        self.expresion = expresion
+        self.objeto = objeto
 
     def ejecutar(self, entorno):
-        res = self.expresion.ejecutar(entorno)
-        if isinstance(res.valor, (list, str)):
-            return ResultadoObtenido(len(res.valor), 'i32')
-        print(f"[Error Semántico] Línea {self.linea}: El tipo {res.tipo} no posee el método .len().")
-        return ResultadoObtenido("None", "None")
+        res_obj = self.objeto.ejecutar(entorno)
+        if res_obj and isinstance(res_obj.valor, (str, list)):
+            return ResultadoObtenido(len(res_obj.valor), "i32")
+        return ResultadoObtenido(0, "i32")
 
 class CasoMatch:
     def __init__(self, patron, bloque):
@@ -638,7 +578,7 @@ class SentenciaMatch(Instruccion):
 
     def ejecutar(self, entorno):
         val_match = self.expresion.ejecutar(entorno)
-        if val_match.tipo == "None":
+        if val_match is None or val_match.tipo == "None":
             return
 
         for caso in self.casos:
@@ -660,21 +600,18 @@ class CicloLoop(Instruccion):
     def ejecutar(self, entorno):
         while True:
             try:
-                res = self.bloque.ejecutar(entorno)
-                if res is not None and hasattr(res, 'tipo') and res.tipo == 'return':
-                    return res
+                self.bloque.ejecutar(entorno)
             except BreakException as b:
-                # Si no tiene etiqueta, o la etiqueta coincide con este loop, rompemos aquí
                 if b.etiqueta is None or b.etiqueta == self.etiqueta:
                     break
                 else:
-                    raise b  # Pertenece a un loop más externo, seguimos propagando el error
+                    raise b
             except ContinueException as c:
                 if c.etiqueta is None or c.etiqueta == self.etiqueta:
                     continue
                 else:
                     raise c
-                
+
 class ArregloRepeticion(Expresion):
     def __init__(self, valor, cantidad, linea, columna):
         super().__init__(linea, columna)
@@ -684,14 +621,8 @@ class ArregloRepeticion(Expresion):
     def ejecutar(self, entorno):
         res_val = self.valor.ejecutar(entorno)
         res_cant = self.cantidad.ejecutar(entorno)
-
-        if res_cant.tipo != 'i32':
-            print(f"[Error Semántico] Línea {self.linea}: La cantidad del arreglo debe ser i32.")
-            return ResultadoObtenido("None", "None")
-
-        # Se crea un arreglo repitiendo el valor evaluado
-        lista = [res_val.valor] * res_cant.valor
-        return ResultadoObtenido(lista, f"[{res_val.tipo}]")
+        if res_cant is None or res_cant.tipo != 'i32': return ResultadoObtenido("None", "None")
+        return ResultadoObtenido([res_val.valor] * res_cant.valor, f"[{res_val.tipo}]")
 
 class SliceArreglo(Expresion):
     def __init__(self, arreglo, inicio, fin, linea, columna):
@@ -702,21 +633,12 @@ class SliceArreglo(Expresion):
 
     def ejecutar(self, entorno):
         res_arr = self.arreglo.ejecutar(entorno)
-        res_inicio = self.inicio.ejecutar(entorno)
-        res_fin = self.fin.ejecutar(entorno)
+        res_i = self.inicio.ejecutar(entorno)
+        res_f = self.fin.ejecutar(entorno)
+        if res_i and res_f and isinstance(res_arr.valor, list):
+            return ResultadoObtenido(res_arr.valor[res_i.valor:res_f.valor], res_arr.tipo)
+        return ResultadoObtenido("None", "None")
 
-        if res_inicio.tipo != 'i32' or res_fin.tipo != 'i32':
-            print(f"[Error Semántico] Línea {self.linea}: Los índices del slice deben ser i32.")
-            return ResultadoObtenido("None", "None")
-
-        if not isinstance(res_arr.valor, list):
-            print(f"[Error Semántico] Línea {self.linea}: Solo se pueden crear slices de arreglos.")
-            return ResultadoObtenido("None", "None")
-
-        # Retornamos el segmento de la lista en Python
-        segmento = res_arr.valor[res_inicio.valor:res_fin.valor]
-        return ResultadoObtenido(segmento, res_arr.tipo)
-    
 class CrearStringNuevo(Expresion):
     def __init__(self, linea, columna):
         super().__init__(linea, columna)
@@ -733,27 +655,21 @@ class LlamadaMetodoString(Expresion):
 
     def ejecutar(self, entorno):
         res_obj = self.objeto.ejecutar(entorno)
-        val_args = [arg.ejecutar(entorno).valor for arg in self.argumentos]
+        val_args = [arg.ejecutar(entorno).valor for arg in self.argumentos if arg.ejecutar(entorno)]
 
-        # 1. Si el objeto principal es una cadena de texto (String)
-        if isinstance(res_obj.valor, str):
-            if self.metodo == 'replace':
-                if len(val_args) != 2:
-                    print(f"[Error Semántico] Línea {self.linea}: replace() requiere 2 argumentos.")
-                    return ResultadoObtenido("None", "None")
-                nuevo_texto = res_obj.valor.replace(str(val_args[0]), str(val_args[1]))
-                return ResultadoObtenido(nuevo_texto, "String")
-            
-            elif self.metodo == 'split_whitespace':
-                # Divide la cadena por espacios y retorna la lista
-                palabras = res_obj.valor.split()
-                return ResultadoObtenido(palabras, "[String]")
+        if res_obj and isinstance(res_obj.valor, str):
+            if self.metodo == 'replace': return ResultadoObtenido(res_obj.valor.replace(str(val_args[0]), str(val_args[1])), "String")
+            elif self.metodo == 'contains': return ResultadoObtenido(str(val_args[0]) in res_obj.valor, "bool")
+            elif self.metodo == 'to_uppercase': return ResultadoObtenido(res_obj.valor.upper(), "String")
+            elif self.metodo == 'to_lowercase': return ResultadoObtenido(res_obj.valor.lower(), "String")
+            elif self.metodo == 'split': return ResultadoObtenido(res_obj.valor.split(str(val_args[0])), "[String]")
+            elif self.metodo == 'split_whitespace': return ResultadoObtenido(res_obj.valor.split(), "[String]")
 
-        # 2. Si el objeto principal ya es una lista (ej. para encadenar .collect())
-        elif isinstance(res_obj.valor, list):
-            if self.metodo == 'collect':
-                # collect agrupa el iterador en Rust; aquí simplemente devolvemos la lista que ya tenemos
+        elif res_obj and isinstance(res_obj.valor, list):
+            if self.metodo == 'contains': return ResultadoObtenido(val_args[0] in res_obj.valor, "bool")
+            elif self.metodo == 'reverse':
+                res_obj.valor.reverse()
                 return ResultadoObtenido(res_obj.valor, res_obj.tipo)
+            elif self.metodo == 'collect': return ResultadoObtenido(res_obj.valor, res_obj.tipo)
 
-        print(f"[Error Semántico] Línea {self.linea}: El método '{self.metodo}' no está disponible para este tipo.")
         return ResultadoObtenido("None", "None")

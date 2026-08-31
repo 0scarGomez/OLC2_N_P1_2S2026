@@ -1,9 +1,7 @@
 import ply.lex as lex
 
-# Lista de Errores léxicos 
 errores_lexicos = []
 
-# Palabras Reservadas
 reservadas = {
     'fn': 'R_FN',
     'let': 'R_LET',
@@ -27,29 +25,17 @@ reservadas = {
     'println': 'R_PRINTLN',
 }
 
-# Lista de Tokens
 tokens = [
     'ID', 'ENTERO', 'DECIMAL', 'CADENA', 'CARACTER',
-    
-    # Operadores Aritméticos
     'MAS', 'MENOS', 'POR', 'DIV', 'MOD',
-    
-    # Operadores Relacionales
     'IGUAL_IGUAL', 'DIFERENTE', 'MAYOR_QUE', 'MENOR_QUE', 'MAYOR_IGUAL', 'MENOR_IGUAL',
-    
-    # Operadores Lógicos
     'NOT', 'AND', 'OR',
-    
-    # Operadores de Asignación
     'IGUAL', 'MAS_IGUAL', 'MENOS_IGUAL', 'POR_IGUAL', 'DIV_IGUAL', 'MOD_IGUAL',
-    
-    # Símbolos de Agrupación y Puntuación
     'PAR_IZQ', 'PAR_DER', 'LLAVE_IZQ', 'LLAVE_DER', 'COR_IZQ', 'COR_DER',
     'PUNTO_COMA', 'DOS_PUNTOS', 'COMA', 'PUNTO', 'FLECHA', 'FLECHA_DOBLE', 'AMPERSAND',
     'CUATRO_PUNTOS', 'ETIQUETA', 'PUNTO_PUNTO',
 ] + list(reservadas.values())
 
-# Expresiones Regulares para Tokens Simples
 t_MAS_IGUAL   = r'\+='
 t_MENOS_IGUAL = r'-='
 t_POR_IGUAL   = r'\*='
@@ -87,7 +73,6 @@ t_PUNTO     = r'\.'
 t_AMPERSAND = r'&'
 t_CUATRO_PUNTOS = r'::'
 
-# Expresiones Regulares con Funciones
 def t_DECIMAL(t):
     r'\d+\.\d+'
     t.value = float(t.value)
@@ -100,24 +85,21 @@ def t_ENTERO(t):
 
 def t_RAW_STRING_HASH(t):
     r'r\#"[\s\S]*?"\#'
-    # Quita r#" al inicio (3 chars) y "# al final (2 chars)
     t.value = t.value[3:-2]
     t.type = 'CADENA'
     return t
 
 def t_RAW_STRING(t):
     r'r"[\s\S]*?"'
-    # Quita r" al inicio (2 chars) y " al final (1 char)
     t.value = t.value[2:-1]
     t.type = 'CADENA'
     return t
 
 def t_CADENA(t):
     r'\"([^\\\n]|(\\.))*?\"'
-    # Quita las comillas inicial y final
     val = t.value[1:-1]
-    # Procesa los saltos de línea y escapes nativos de la cadena normal
-    t.value = val.encode('utf-8').decode('unicode_escape')
+    val = val.replace('\\n', '\n').replace('\\t', '\t').replace('\\r', '\r').replace('\\"', '"').replace('\\\\', '\\')
+    t.value = val
     return t
 
 def t_CARACTER(t):
@@ -130,19 +112,16 @@ def t_ID(t):
     t.type = reservadas.get(t.value, 'ID')
     return t
 
-# Comentario de Línea
 def t_COMENTARIO_LINEA(t):
     r'//.*'
     pass
 
-# Comentario de Bloque (Soporta cerrados y no cerrados)
 def t_COMENTARIO_MULTILINEA(t):
     r'/\*[\s\S]*?\*/|/\*[\s\S]*'
     if not t.value.endswith('*/'):
         line_start = t.lexer.lexdata.rfind('\n', 0, t.lexer.lexpos) + 1
         columna = (t.lexer.lexpos - line_start) + 1
         mensaje_error = "Comentario de bloque no cerrado (se esperaba '*/')"
-        print(f"[Error Léxico] Línea {t.lexer.lineno}, Columna {columna}\n{mensaje_error}")
         errores_lexicos.append({
             "tipo": "Léxico",
             "descripcion": mensaje_error,
@@ -164,17 +143,13 @@ def t_ETIQUETA(t):
 def t_error(t):
     line_start = t.lexer.lexdata.rfind('\n', 0, t.lexer.lexpos) + 1
     columna = (t.lexer.lexpos - line_start) + 1
-    
     mensaje_error = f"Carácter no reconocido: '{t.value[0]}'"
-    print(f"[Error Léxico] Línea {t.lexer.lineno}, Columna {columna}\n{mensaje_error}")
-    
     errores_lexicos.append({
         "tipo": "Léxico",
         "descripcion": mensaje_error,
         "linea": t.lexer.lineno,
         "columna": columna
     })
-    
     t.lexer.skip(1)
 
 lexer = lex.lex()

@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OxigenScript - Intérprete Rust</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Graphviz / D3JS para renderizar el Árbol AST -->
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://unpkg.com/@hpcc-js/wasm@2.20.0/dist/index.min.js" type="application/javascript/wasm"></script>
-    <script src="https://unpkg.com/d3-graphviz@5.6.0/build/d3-graphviz.js"></script>
 
     <style>
         :root {
@@ -45,17 +40,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .brand-logo {
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #6c757d;
         }
 
         .brand-title {
@@ -218,11 +202,16 @@
             margin-top: 10px;
             padding: 10px;
             background: #fafafa;
-            overflow-y: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+            overflow: auto;
+            height: calc(100% - 45px);
+        }
+
+        /* Estilo para que el gráfico SVG se adapte al contenedor */
+        .ast-container svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -230,7 +219,6 @@
 
     <header class="top-navbar">
         <div class="brand-section">
-            <div class="brand-logo">☒</div>
             <div>
                 <h1 class="brand-title">OxigenScript</h1>
                 <p class="brand-subtitle">Intérprete de un lenguaje inspirado en Rust</p>
@@ -249,20 +237,10 @@
     <div class="main-layout">
         <div class="editor-container">
             <div class="line-numbers" id="lineNumbers">1</div>
-            <textarea id="codeEditor" class="code-textarea" spellcheck="false" oninput="actualizarLineas()" onscroll="sincronizarScroll()">let mut x: i32 = 10;
-let y: i32 = 20;
-
-if x < y {
-    x = x + y;
-} else {
-    x = x - y;
-}
-
-while x > 0 {
-    x = x - 1;
-}
-
-println!(x);</textarea>
+            <textarea id="codeEditor" class="code-textarea" spellcheck="false" oninput="actualizarLineas()" onscroll="sincronizarScroll()">fn main() {
+    let x = 10;
+    println!(x);
+}</textarea>
         </div>
 
         <div class="bottom-container">
@@ -285,20 +263,20 @@ println!(x);</textarea>
                 </ul>
 
                 <div class="tab-content h-100" id="reportTabsContent">
-                    <div class="tab-pane fade show active tab-content-box" id="errores">
-                        <div>
+                    <div class="tab-pane fade show active tab-content-box w-100" id="errores">
+                        <div class="text-center mt-3">
                             <div class="fw-bold text-secondary">Errores</div>
                             <div class="small text-muted">Aquí se mostrarán los errores del programa.</div>
                         </div>
                     </div>
-                    <div class="tab-pane fade tab-content-box" id="simbolos">
-                        <div>
+                    <div class="tab-pane fade tab-content-box w-100" id="simbolos">
+                        <div class="text-center mt-3">
                             <div class="fw-bold text-secondary">Tabla de símbolos</div>
                             <div class="small text-muted">Aquí se mostrará la información de las variables y funciones.</div>
                         </div>
                     </div>
-                    <div class="tab-pane fade tab-content-box" id="ast">
-                        <div>
+                    <div class="tab-pane fade tab-content-box w-100 ast-container" id="ast">
+                        <div class="text-center mt-3">
                             <div class="fw-bold text-secondary">AST</div>
                             <div class="small text-muted">Aquí se mostrará el árbol de sintaxis abstracta del programa.</div>
                         </div>
@@ -372,45 +350,66 @@ println!(x);</textarea>
                 const duracion = ((tiempoFin - tiempoInicio) / 1000).toFixed(4);
 
                 if (data.exito) {
-                    consola.innerText = `> Ejecutando OxigenScript...\nCompilación exitosa.\n--- Programa en ejecución ---\n${data.consola}\n--- Fin de la ejecución ---\nTiempo de ejecución: ${duracion}s`;
+                    consola.innerText = `> Compilación exitosa.\n--- Salida ---\n${data.consola}\n---------------\nTiempo: ${duracion}s`;
                 } else {
-                    consola.innerText = `> Ejecutando OxigenScript...\nError detectado:\n${data.consola}`;
+                    consola.innerText = `> Error detectado:\n${data.consola}`;
                 }
 
                 // 1. Renderizar Errores
                 if (data.errores && data.errores.length > 0) {
                     let htmlErrores = `<table class="table table-sm table-striped w-100"><thead><tr><th>Tipo</th><th>Descripción</th><th>Línea</th><th>Columna</th></tr></thead><tbody>`;
                     data.errores.forEach(err => {
-                        htmlErrores += `<tr><td class="text-danger fw-bold">${err.tipo}</td><td>${err.descripcion}</td><td>${err.linea}</td><td>${err.columna}</td></tr>`;
+                        const tipo = err.tipo || 'Error';
+                        const desc = err.descripcion || err.msg || JSON.stringify(err);
+                        const lin = err.linea || err.line || '-';
+                        const col = err.columna || err.column || '-';
+                        htmlErrores += `<tr><td class="text-danger fw-bold">${tipo}</td><td>${desc}</td><td>${lin}</td><td>${col}</td></tr>`;
                     });
                     htmlErrores += `</tbody></table>`;
                     tabErrores.innerHTML = htmlErrores;
                 } else {
-                    tabErrores.innerHTML = `<div class="text-success p-3">✓ No se detectaron errores léxicos, sintácticos ni semánticos.</div>`;
+                    tabErrores.innerHTML = `<div class="text-success p-3 text-center">✓ No se detectaron errores.</div>`;
                 }
 
                 // 2. Renderizar Tabla de Símbolos
                 if (data.simbolos && data.simbolos.length > 0) {
-                    let htmlSimbolos = `<table class="table table-sm table-hover w-100"><thead><tr><th>ID</th><th>Tipo</th><th>Valor</th><th>Mutable</th></tr></thead><tbody>`;
-                    data.simbolos.forEach(sim => {
-                        htmlSimbolos += `<tr><td class="fw-bold">${sim.id}</td><td><span class="badge bg-secondary">${sim.tipo}</span></td><td>${sim.valor}</td><td>${sim.mutable}</td></tr>`;
+                    let htmlSimbolos = `<table class="table table-sm table-hover w-100">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Identificador</th>
+                                <th>Categoría</th>
+                                <th>Tipo</th>
+                                <th>Ámbito</th>
+                                <th>Línea</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                    
+                    data.simbolos.forEach((sim, index) => {
+                        htmlSimbolos += `<tr>
+                            <td>${index + 1}</td>
+                            <td class="fw-bold">${sim.id || ''}</td>
+                            <td>${sim.categoria || 'Variable'}</td>
+                            <td><span class="badge bg-secondary">${sim.tipo || ''}</span></td>
+                            <td>${sim.ambito || 'Global'}</td>
+                            <td>${sim.linea || '-'}</td>
+                            <td>${sim.valor || ''}</td>
+                        </tr>`;
                     });
+                    
                     htmlSimbolos += `</tbody></table>`;
                     tabSimbolos.innerHTML = htmlSimbolos;
                 } else {
-                    tabSimbolos.innerHTML = `<div class="text-muted p-3">La tabla de símbolos está vacía.</div>`;
+                    tabSimbolos.innerHTML = `<div class="text-muted p-3 text-center">La tabla de símbolos está vacía.</div>`;
                 }
 
-                // 3. Renderizar Gráfica AST
-                if (data.ast_dot) {
-                    tabAst.innerHTML = `<div id="graph" style="width: 100%; height: 100%; overflow: auto;"></div>`;
-                    d3.select("#graph").graphviz()
-                        .width(tabAst.clientWidth - 20)
-                        .height(200)
-                        .fit(true)
-                        .renderDot(data.ast_dot);
+                // 3. Renderizar imagen vectorial SVG del AST generada por Python
+                if (data.ast_svg && data.ast_svg.trim() !== '') {
+                    tabAst.innerHTML = data.ast_svg;
                 } else {
-                    tabAst.innerHTML = `<div class="text-muted p-3">No hay árbol AST disponible.</div>`;
+                    tabAst.innerHTML = `<div class="text-muted p-3 text-center">No hay árbol AST disponible.</div>`;
                 }
 
             } catch (error) {

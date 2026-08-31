@@ -1,16 +1,18 @@
 import ply.yacc as yacc
 from backend.analizador.lexer import tokens
 from backend.analizador.ast_nodes import (
-    DeclaracionVariable, Primitivo, OperacionBinaria,OperacionUnaria, 
+    DeclaracionVariable, Primitivo, OperacionBinaria, OperacionUnaria, 
     Imprimir, AccesoVariable, Bloque, SentenciaIf,
     AsignacionVariable, CicloWhile, SentenciaBreak, SentenciaContinue,
     DeclaracionFuncion, LlamadaFuncion, SentenciaReturn,
     ArregloLiteral, AccesoArreglo, AsignacionArreglo,
     DeclaracionStruct, InstanciacionStruct, AccesoAtributo,
-    AsignacionAtributo, MetodoLen, CasoMatch, SentenciaMatch, CicloLoop, ArregloRepeticion, SliceArreglo, CrearStringNuevo, LlamadaMetodoString
+    AsignacionAtributo, MetodoLen, CasoMatch, SentenciaMatch, CicloLoop, 
+    ArregloRepeticion, SliceArreglo, CrearStringNuevo, LlamadaMetodoString
 )
 
-# Precedencia de operadores
+errores_sintacticos = []
+
 precedence = (
     ('left', 'OR'),
     ('left', 'AND'),
@@ -20,6 +22,7 @@ precedence = (
     ('left', 'POR', 'DIV', 'MOD'),
     ('right', 'NOT', 'UMENOS'),
     ('left', 'PUNTO'),
+    ('left', 'PAR_IZQ'),
 )
 
 def p_init(p):
@@ -48,7 +51,8 @@ def p_instruccion(p):
                    | instruccion_asignacion_arreglo
                    | instruccion_asignacion_atributo
                    | instruccion_match
-                   | instruccion_loop'''
+                   | instruccion_loop
+                   | bloque'''
     p[0] = p[1]
 
 def p_instruccion_declaracion(p):
@@ -63,14 +67,14 @@ def p_instruccion_declaracion(p):
     elif len(p) == 8:
         p[0] = DeclaracionVariable(False, p[2], p[4], p[6], p.lineno(1), p.lexpos(1))
     elif len(p) == 7:
-        if p[4] == '=': # let mut id = exp ;
+        if p[4] == '=':
             p[0] = DeclaracionVariable(True, p[3], None, p[5], p.lineno(1), p.lexpos(1))
-        else:           # let mut id : tipo ;
+        else:
             p[0] = DeclaracionVariable(True, p[3], p[5], None, p.lineno(1), p.lexpos(1))
     elif len(p) == 6:
-        if p[3] == '=': # let id = exp ;
+        if p[3] == '=':
             p[0] = DeclaracionVariable(False, p[2], None, p[4], p.lineno(1), p.lexpos(1))
-        else:           # let id : tipo ;
+        else:
             p[0] = DeclaracionVariable(False, p[2], p[4], None, p.lineno(1), p.lexpos(1))
 
 def p_instruccion_loop(p):
@@ -104,6 +108,7 @@ def p_instruccion_imprimir(p):
 
 def p_instruccion_if(p):
     '''instruccion_if : R_IF expresion_sin_struct bloque R_ELSE bloque
+                     | R_IF expresion_sin_struct bloque R_ELSE instruccion_if
                      | R_IF expresion_sin_struct bloque'''
     if len(p) == 6:
         p[0] = SentenciaIf(p[2], p[3], p[5], p.lineno(1), p.lexpos(1))
@@ -159,7 +164,8 @@ def p_instruccion_return(p):
     p[0] = SentenciaReturn(exp, p.lineno(1), p.lexpos(1))
 
 def p_instruccion_struct(p):
-    '''instruccion_struct : R_STRUCT ID LLAVE_IZQ campos_struct LLAVE_DER'''
+    '''instruccion_struct : R_STRUCT ID LLAVE_IZQ campos_struct LLAVE_DER
+                          | R_STRUCT ID LLAVE_IZQ campos_struct COMA LLAVE_DER'''
     p[0] = DeclaracionStruct(p[2], dict(p[4]), p.lineno(1), p.lexpos(1))
 
 def p_campos_struct(p):
@@ -204,8 +210,12 @@ def p_caso_match_item(p):
     p[0] = p[1]
 
 def p_caso_match(p):
-    '''caso_match : expresion FLECHA_DOBLE bloque'''
-    p[0] = CasoMatch(p[1], p[3])
+    '''caso_match : expresion FLECHA_DOBLE bloque
+               | expresion FLECHA_DOBLE expresion'''
+    if isinstance(p[3], Bloque):
+        p[0] = CasoMatch(p[1], p[3])
+    else:
+        p[0] = CasoMatch(p[1], Bloque([p[3]], p.lineno(3), p.lexpos(3)))
 
 def p_bloque(p):
     '''bloque : LLAVE_IZQ instrucciones LLAVE_DER
@@ -226,22 +236,19 @@ def p_tipo(p):
             | ID
             | ID MENOR_QUE AMPERSAND ID MAYOR_QUE'''
     if len(p) == 4:
-        # Caso de arreglo dinámico: [tipo]
         p[0] = f"[{p[2]}]"
     elif len(p) == 6:
         if p[1] == '[':
-            # Caso de arreglo con tamaño estático: [tipo; N]
             p[0] = f"[{p[2]}]"
         else:
-            # Caso de Vector: Vec<&str> -> Se mapea internamente a [String]
             p[0] = "[String]"
     else:
-        # Tipos primitivos estándar
         p[0] = p[1]
 
 def p_expresion(p):
     '''expresion : expresion_sin_struct
-                 | ID LLAVE_IZQ valores_campos LLAVE_DER'''
+                 | ID LLAVE_IZQ valores_campos LLAVE_DER
+                 | ID LLAVE_IZQ valores_campos COMA LLAVE_DER'''
     if len(p) == 2:
         p[0] = p[1]
     else:
@@ -267,7 +274,6 @@ def p_expresion_primitiva(p):
                             | R_TRUE
                             | R_FALSE'''
     tipo_token = p.slice[1].type
-
     if tipo_token == 'ENTERO':
         p[0] = Primitivo(int(p[1]), 'i32', p.lineno(1), p.lexpos(1))
     elif tipo_token == 'DECIMAL':
@@ -277,10 +283,8 @@ def p_expresion_primitiva(p):
     elif tipo_token == 'R_FALSE':
         p[0] = Primitivo(False, 'bool', p.lineno(1), p.lexpos(1))
     elif tipo_token == 'CARACTER':
-        valor = str(p[1]).replace("'", "")
-        p[0] = Primitivo(valor, 'char', p.lineno(1), p.lexpos(1))
+        p[0] = Primitivo(str(p[1]).replace("'", ""), 'char', p.lineno(1), p.lexpos(1))
     else:
-        # El lexer ya hizo el trabajo sucio, lo pasamos intacto
         p[0] = Primitivo(str(p[1]), 'String', p.lineno(1), p.lexpos(1))
 
 def p_expresion_id(p):
@@ -308,9 +312,19 @@ def p_expresion_acceso_arreglo(p):
     '''expresion_sin_struct : expresion_sin_struct COR_IZQ expresion COR_DER'''
     p[0] = AccesoArreglo(p[1], p[3], p.lineno(2), p.lexpos(2))
 
-def p_expresion_acceso_atributo(p):
-    '''expresion_sin_struct : expresion_sin_struct PUNTO ID'''
-    p[0] = AccesoAtributo(p[1], p[3], p.lineno(2), p.lexpos(2))
+def p_expresion_acceso_y_metodos(p):
+    '''expresion_sin_struct : expresion_sin_struct PUNTO ID
+                            | expresion_sin_struct PUNTO ID PAR_IZQ PAR_DER
+                            | expresion_sin_struct PUNTO ID PAR_IZQ argumentos PAR_DER'''
+    if len(p) == 4:
+        p[0] = AccesoAtributo(p[1], p[3], p.lineno(2), p.lexpos(2))
+    elif len(p) == 6:
+        if p[3] == 'len':
+            p[0] = MetodoLen(p[1], p.lineno(2), p.lexpos(2))
+        else:
+            p[0] = LlamadaMetodoString(p[1], p[3], [], p.lineno(2), p.lexpos(2))
+    elif len(p) == 7:
+        p[0] = LlamadaMetodoString(p[1], p[3], p[5], p.lineno(2), p.lexpos(2))
 
 def p_expresion_string_from(p):
     '''expresion_sin_struct : R_STRING CUATRO_PUNTOS ID PAR_IZQ expresion_sin_struct PAR_DER
@@ -323,18 +337,6 @@ def p_expresion_string_from(p):
     elif len(p) == 6:
         if p[3] == 'new':
             p[0] = CrearStringNuevo(p.lineno(1), p.lexpos(1))
-
-def p_expresion_metodos_string(p):
-    '''expresion_sin_struct : expresion_sin_struct PUNTO ID PAR_IZQ argumentos PAR_DER
-                            | expresion_sin_struct PUNTO ID PAR_IZQ PAR_DER'''
-    if len(p) == 7:
-        p[0] = LlamadaMetodoString(p[1], p[3], p[5], p.lineno(2), p.lexpos(2))
-    else:
-        # Si el método que se invoca es "len", retornamos el nodo MetodoLen
-        if p[3] == 'len':
-            p[0] = MetodoLen(p[1], p.lineno(2), p.lexpos(2))
-        else:
-            p[0] = LlamadaMetodoString(p[1], p[3], [], p.lineno(2), p.lexpos(2))
 
 def p_expresion_llamada(p):
     '''expresion_sin_struct : ID PAR_IZQ argumentos PAR_DER
@@ -360,11 +362,11 @@ def p_expresion_arreglo_literal(p):
         p[0] = ArregloLiteral([], p.lineno(1), p.lexpos(1))
     elif len(p) == 6:
         p[0] = ArregloRepeticion(p[2], p[4], p.lineno(1), p.lexpos(1))
-        
+
 def p_expresion_slice(p):
     '''expresion_sin_struct : AMPERSAND expresion_sin_struct COR_IZQ expresion PUNTO_PUNTO expresion COR_DER'''
     p[0] = SliceArreglo(p[2], p[4], p[6], p.lineno(1), p.lexpos(1))
-    
+
 def p_elementos(p):
     '''elementos : elementos COMA expresion
                   | expresion'''
@@ -375,9 +377,20 @@ def p_elementos(p):
 
 def p_error(p):
     if p:
-        print(f"[Error Sintáctico] Línea {p.lineno}\nSe esperaba un token válido, pero se encontró '{p.value}'")
+        errores_sintacticos.append({
+            'tipo': 'Sintáctico',
+            'descripcion': f"Se esperaba un token válido, pero se encontró '{p.value}'",
+            'linea': p.lineno,
+            'columna': p.lexpos
+        })
+        parser.errok()
     else:
-        print("[Error Sintáctico] Fin de archivo inesperado")
+        errores_sintacticos.append({
+            'tipo': 'Sintáctico',
+            'descripcion': "Fin de archivo inesperado",
+            'linea': "Fin",
+            'columna': "Fin"
+        })
 
 def p_instruccion_expresion_suelta(p):
     '''instruccion : expresion PUNTO_COMA'''
@@ -391,5 +404,17 @@ def p_expresion_unaria(p):
 def p_expresion_agrupacion(p):
     '''expresion_sin_struct : PAR_IZQ expresion_sin_struct PAR_DER'''
     p[0] = p[2]
+
+def p_instruccion_metodo_suelto(p):
+    '''instruccion : ID PUNTO ID PAR_IZQ argumentos PAR_DER PUNTO_COMA
+                   | ID PUNTO ID PAR_IZQ PAR_DER PUNTO_COMA'''
+    acceso = AccesoVariable(p[1], p.lineno(1), p.lexpos(1))
+    if len(p) == 8:
+        p[0] = LlamadaMetodoString(acceso, p[3], p[5], p.lineno(2), p.lexpos(2))
+    else:
+        if p[3] == 'len':
+            p[0] = MetodoLen(acceso, p.lineno(2), p.lexpos(2))
+        else:
+            p[0] = LlamadaMetodoString(acceso, p[3], [], p.lineno(2), p.lexpos(2))
 
 parser = yacc.yacc(write_tables=False, debug=False)

@@ -3,19 +3,31 @@ class Simbolo:
         self.identificador = identificador
         self.tipo = tipo
         self.valor = valor
-        self.es_mutable = es_mutable # Para verificar errores al reasignar
+        self.es_mutable = es_mutable 
         self.ambito = ambito         
         self.linea = linea
         self.columna = columna
 
 class Entorno:
     def __init__(self, anterior=None, nombre_ambito="Global"):
-        self.tabla = {}          # Diccionario de identificador 
-        self.anterior = anterior # Entorno padre
+        self.tabla = {}          
+        self.anterior = anterior 
         self.nombre_ambito = nombre_ambito
+        self.errores = anterior.errores if anterior else []
+        self.todos_los_simbolos = anterior.todos_los_simbolos if anterior else []
+
+    def registrar_error(self, tipo, descripcion, linea, columna):
+        self.errores.append({
+            'tipo': tipo,
+            'descripcion': descripcion,
+            'linea': linea,
+            'columna': columna
+        })
+        print(f"[{tipo}] Línea {linea}, Columna {columna}\n{descripcion}")
 
     def guardar_variable(self, identificador, simbolo):
         self.tabla[identificador] = simbolo
+        self.todos_los_simbolos.append(simbolo)
 
     def obtener_variable(self, identificador):
         entorno_actual = self
@@ -23,15 +35,15 @@ class Entorno:
             if identificador in entorno_actual.tabla:
                 return entorno_actual.tabla[identificador]
             entorno_actual = entorno_actual.anterior
-        return None # Generara un Error Semantico 
+        return None 
 
     def actualizar_variable(self, identificador, nuevo_valor):
         entorno_actual = self
         while entorno_actual is not None:
             if identificador in entorno_actual.tabla:
                 simbolo = entorno_actual.tabla[identificador]
-                if not simbolo.es_mutable:
-                    return "ERROR_INMUTABLE" # La variable es inmutable por defecto
+                if not getattr(simbolo, 'es_mutable', False):
+                    return "ERROR_INMUTABLE" 
                 simbolo.valor = nuevo_valor
                 return "OK"
             entorno_actual = entorno_actual.anterior
