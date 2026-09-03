@@ -1,0 +1,2103 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AMPERSAND
+    CARACTER
+    COMA
+    COR_DER
+    COR_IZQ
+    DIV_IGUAL
+    FLECHA
+    FLECHA_DOBLE
+    MAS_IGUAL
+    MENOS_IGUAL
+    MOD_IGUAL
+    POR_IGUAL
+    PUNTO
+    R_BREAK
+    R_CHAR
+    R_CONTINUE
+    R_FN
+    R_LOOP
+    R_MATCH
+    R_RETURN
+    R_STRUCT
+
+Grammar
+
+Rule 0     S' -> programa
+Rule 1     programa -> instrucciones
+Rule 2     instrucciones -> instrucciones instruccion
+Rule 3     instrucciones -> instruccion
+Rule 4     instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+Rule 5     instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+Rule 6     instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA
+Rule 7     tipo -> R_I32
+Rule 8     tipo -> R_F64
+Rule 9     tipo -> R_STRING
+Rule 10    tipo -> R_BOOL
+Rule 11    expresion -> expresion MAS expresion
+Rule 12    expresion -> expresion MENOS expresion
+Rule 13    expresion -> expresion POR expresion
+Rule 14    expresion -> expresion DIV expresion
+Rule 15    expresion -> expresion MOD expresion
+Rule 16    expresion -> expresion MAYOR_QUE expresion
+Rule 17    expresion -> expresion MENOR_QUE expresion
+Rule 18    expresion -> expresion MAYOR_IGUAL expresion
+Rule 19    expresion -> expresion MENOR_IGUAL expresion
+Rule 20    expresion -> expresion IGUAL_IGUAL expresion
+Rule 21    expresion -> expresion DIFERENTE expresion
+Rule 22    expresion -> expresion AND expresion
+Rule 23    expresion -> expresion OR expresion
+Rule 24    expresion -> ENTERO
+Rule 25    expresion -> DECIMAL
+Rule 26    expresion -> CADENA
+Rule 27    expresion -> R_TRUE
+Rule 28    expresion -> R_FALSE
+Rule 29    expresion -> ID
+Rule 30    bloque -> LLAVE_IZQ instrucciones LLAVE_DER
+Rule 31    bloque -> LLAVE_IZQ LLAVE_DER
+Rule 32    instruccion -> R_IF expresion bloque
+Rule 33    instruccion -> R_IF expresion bloque R_ELSE bloque
+Rule 34    instruccion -> ID IGUAL expresion PUNTO_COMA
+Rule 35    instruccion -> R_WHILE expresion bloque
+
+Terminals, with rules where they appear
+
+AMPERSAND            : 
+AND                  : 22
+CADENA               : 26
+CARACTER             : 
+COMA                 : 
+COR_DER              : 
+COR_IZQ              : 
+DECIMAL              : 25
+DIFERENTE            : 21
+DIV                  : 14
+DIV_IGUAL            : 
+DOS_PUNTOS           : 4 5
+ENTERO               : 24
+FLECHA               : 
+FLECHA_DOBLE         : 
+ID                   : 4 5 29 34
+IGUAL                : 4 5 34
+IGUAL_IGUAL          : 20
+LLAVE_DER            : 30 31
+LLAVE_IZQ            : 30 31
+MAS                  : 11
+MAS_IGUAL            : 
+MAYOR_IGUAL          : 18
+MAYOR_QUE            : 16
+MENOR_IGUAL          : 19
+MENOR_QUE            : 17
+MENOS                : 12
+MENOS_IGUAL          : 
+MOD                  : 15
+MOD_IGUAL            : 
+NOT                  : 6
+OR                   : 23
+PAR_DER              : 6
+PAR_IZQ              : 6
+POR                  : 13
+POR_IGUAL            : 
+PUNTO                : 
+PUNTO_COMA           : 4 5 6 34
+R_BOOL               : 10
+R_BREAK              : 
+R_CHAR               : 
+R_CONTINUE           : 
+R_ELSE               : 33
+R_F64                : 8
+R_FALSE              : 28
+R_FN                 : 
+R_I32                : 7
+R_IF                 : 32 33
+R_LET                : 4 5
+R_LOOP               : 
+R_MATCH              : 
+R_MUT                : 4
+R_PRINTLN            : 6
+R_RETURN             : 
+R_STRING             : 9
+R_STRUCT             : 
+R_TRUE               : 27
+R_WHILE              : 35
+error                : 
+
+Nonterminals, with rules where they appear
+
+bloque               : 32 33 33 35
+expresion            : 4 5 6 11 11 12 12 13 13 14 14 15 15 16 16 17 17 18 18 19 19 20 20 21 21 22 22 23 23 32 33 34 35
+instruccion          : 2 3
+instrucciones        : 1 2 30
+programa             : 0
+tipo                 : 4 5
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . programa
+    (1) programa -> . instrucciones
+    (2) instrucciones -> . instrucciones instruccion
+    (3) instrucciones -> . instruccion
+    (4) instruccion -> . R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+    (5) instruccion -> . R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+    (6) instruccion -> . R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA
+    (32) instruccion -> . R_IF expresion bloque
+    (33) instruccion -> . R_IF expresion bloque R_ELSE bloque
+    (34) instruccion -> . ID IGUAL expresion PUNTO_COMA
+    (35) instruccion -> . R_WHILE expresion bloque
+
+    R_LET           shift and go to state 4
+    R_PRINTLN       shift and go to state 6
+    R_IF            shift and go to state 7
+    ID              shift and go to state 5
+    R_WHILE         shift and go to state 8
+
+    programa                       shift and go to state 1
+    instrucciones                  shift and go to state 2
+    instruccion                    shift and go to state 3
+
+state 1
+
+    (0) S' -> programa .
+
+
+
+state 2
+
+    (1) programa -> instrucciones .
+    (2) instrucciones -> instrucciones . instruccion
+    (4) instruccion -> . R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+    (5) instruccion -> . R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+    (6) instruccion -> . R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA
+    (32) instruccion -> . R_IF expresion bloque
+    (33) instruccion -> . R_IF expresion bloque R_ELSE bloque
+    (34) instruccion -> . ID IGUAL expresion PUNTO_COMA
+    (35) instruccion -> . R_WHILE expresion bloque
+
+    $end            reduce using rule 1 (programa -> instrucciones .)
+    R_LET           shift and go to state 4
+    R_PRINTLN       shift and go to state 6
+    R_IF            shift and go to state 7
+    ID              shift and go to state 5
+    R_WHILE         shift and go to state 8
+
+    instruccion                    shift and go to state 9
+
+state 3
+
+    (3) instrucciones -> instruccion .
+
+    R_LET           reduce using rule 3 (instrucciones -> instruccion .)
+    R_PRINTLN       reduce using rule 3 (instrucciones -> instruccion .)
+    R_IF            reduce using rule 3 (instrucciones -> instruccion .)
+    ID              reduce using rule 3 (instrucciones -> instruccion .)
+    R_WHILE         reduce using rule 3 (instrucciones -> instruccion .)
+    $end            reduce using rule 3 (instrucciones -> instruccion .)
+    LLAVE_DER       reduce using rule 3 (instrucciones -> instruccion .)
+
+
+state 4
+
+    (4) instruccion -> R_LET . R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+    (5) instruccion -> R_LET . ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+
+    R_MUT           shift and go to state 10
+    ID              shift and go to state 11
+
+
+state 5
+
+    (34) instruccion -> ID . IGUAL expresion PUNTO_COMA
+
+    IGUAL           shift and go to state 12
+
+
+state 6
+
+    (6) instruccion -> R_PRINTLN . NOT PAR_IZQ expresion PAR_DER PUNTO_COMA
+
+    NOT             shift and go to state 13
+
+
+state 7
+
+    (32) instruccion -> R_IF . expresion bloque
+    (33) instruccion -> R_IF . expresion bloque R_ELSE bloque
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 14
+
+state 8
+
+    (35) instruccion -> R_WHILE . expresion bloque
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 21
+
+state 9
+
+    (2) instrucciones -> instrucciones instruccion .
+
+    R_LET           reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    R_PRINTLN       reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    R_IF            reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    ID              reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    R_WHILE         reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    $end            reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    LLAVE_DER       reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+
+
+state 10
+
+    (4) instruccion -> R_LET R_MUT . ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+
+    ID              shift and go to state 22
+
+
+state 11
+
+    (5) instruccion -> R_LET ID . DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+
+    DOS_PUNTOS      shift and go to state 23
+
+
+state 12
+
+    (34) instruccion -> ID IGUAL . expresion PUNTO_COMA
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 24
+
+state 13
+
+    (6) instruccion -> R_PRINTLN NOT . PAR_IZQ expresion PAR_DER PUNTO_COMA
+
+    PAR_IZQ         shift and go to state 25
+
+
+state 14
+
+    (32) instruccion -> R_IF expresion . bloque
+    (33) instruccion -> R_IF expresion . bloque R_ELSE bloque
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+    (30) bloque -> . LLAVE_IZQ instrucciones LLAVE_DER
+    (31) bloque -> . LLAVE_IZQ LLAVE_DER
+
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+    MAYOR_QUE       shift and go to state 32
+    MENOR_QUE       shift and go to state 33
+    MAYOR_IGUAL     shift and go to state 34
+    MENOR_IGUAL     shift and go to state 35
+    IGUAL_IGUAL     shift and go to state 36
+    DIFERENTE       shift and go to state 37
+    AND             shift and go to state 38
+    OR              shift and go to state 39
+    LLAVE_IZQ       shift and go to state 40
+
+    bloque                         shift and go to state 26
+
+state 15
+
+    (24) expresion -> ENTERO .
+
+    MAS             reduce using rule 24 (expresion -> ENTERO .)
+    MENOS           reduce using rule 24 (expresion -> ENTERO .)
+    POR             reduce using rule 24 (expresion -> ENTERO .)
+    DIV             reduce using rule 24 (expresion -> ENTERO .)
+    MOD             reduce using rule 24 (expresion -> ENTERO .)
+    MAYOR_QUE       reduce using rule 24 (expresion -> ENTERO .)
+    MENOR_QUE       reduce using rule 24 (expresion -> ENTERO .)
+    MAYOR_IGUAL     reduce using rule 24 (expresion -> ENTERO .)
+    MENOR_IGUAL     reduce using rule 24 (expresion -> ENTERO .)
+    IGUAL_IGUAL     reduce using rule 24 (expresion -> ENTERO .)
+    DIFERENTE       reduce using rule 24 (expresion -> ENTERO .)
+    AND             reduce using rule 24 (expresion -> ENTERO .)
+    OR              reduce using rule 24 (expresion -> ENTERO .)
+    LLAVE_IZQ       reduce using rule 24 (expresion -> ENTERO .)
+    PUNTO_COMA      reduce using rule 24 (expresion -> ENTERO .)
+    PAR_DER         reduce using rule 24 (expresion -> ENTERO .)
+
+
+state 16
+
+    (25) expresion -> DECIMAL .
+
+    MAS             reduce using rule 25 (expresion -> DECIMAL .)
+    MENOS           reduce using rule 25 (expresion -> DECIMAL .)
+    POR             reduce using rule 25 (expresion -> DECIMAL .)
+    DIV             reduce using rule 25 (expresion -> DECIMAL .)
+    MOD             reduce using rule 25 (expresion -> DECIMAL .)
+    MAYOR_QUE       reduce using rule 25 (expresion -> DECIMAL .)
+    MENOR_QUE       reduce using rule 25 (expresion -> DECIMAL .)
+    MAYOR_IGUAL     reduce using rule 25 (expresion -> DECIMAL .)
+    MENOR_IGUAL     reduce using rule 25 (expresion -> DECIMAL .)
+    IGUAL_IGUAL     reduce using rule 25 (expresion -> DECIMAL .)
+    DIFERENTE       reduce using rule 25 (expresion -> DECIMAL .)
+    AND             reduce using rule 25 (expresion -> DECIMAL .)
+    OR              reduce using rule 25 (expresion -> DECIMAL .)
+    LLAVE_IZQ       reduce using rule 25 (expresion -> DECIMAL .)
+    PUNTO_COMA      reduce using rule 25 (expresion -> DECIMAL .)
+    PAR_DER         reduce using rule 25 (expresion -> DECIMAL .)
+
+
+state 17
+
+    (26) expresion -> CADENA .
+
+    MAS             reduce using rule 26 (expresion -> CADENA .)
+    MENOS           reduce using rule 26 (expresion -> CADENA .)
+    POR             reduce using rule 26 (expresion -> CADENA .)
+    DIV             reduce using rule 26 (expresion -> CADENA .)
+    MOD             reduce using rule 26 (expresion -> CADENA .)
+    MAYOR_QUE       reduce using rule 26 (expresion -> CADENA .)
+    MENOR_QUE       reduce using rule 26 (expresion -> CADENA .)
+    MAYOR_IGUAL     reduce using rule 26 (expresion -> CADENA .)
+    MENOR_IGUAL     reduce using rule 26 (expresion -> CADENA .)
+    IGUAL_IGUAL     reduce using rule 26 (expresion -> CADENA .)
+    DIFERENTE       reduce using rule 26 (expresion -> CADENA .)
+    AND             reduce using rule 26 (expresion -> CADENA .)
+    OR              reduce using rule 26 (expresion -> CADENA .)
+    LLAVE_IZQ       reduce using rule 26 (expresion -> CADENA .)
+    PUNTO_COMA      reduce using rule 26 (expresion -> CADENA .)
+    PAR_DER         reduce using rule 26 (expresion -> CADENA .)
+
+
+state 18
+
+    (27) expresion -> R_TRUE .
+
+    MAS             reduce using rule 27 (expresion -> R_TRUE .)
+    MENOS           reduce using rule 27 (expresion -> R_TRUE .)
+    POR             reduce using rule 27 (expresion -> R_TRUE .)
+    DIV             reduce using rule 27 (expresion -> R_TRUE .)
+    MOD             reduce using rule 27 (expresion -> R_TRUE .)
+    MAYOR_QUE       reduce using rule 27 (expresion -> R_TRUE .)
+    MENOR_QUE       reduce using rule 27 (expresion -> R_TRUE .)
+    MAYOR_IGUAL     reduce using rule 27 (expresion -> R_TRUE .)
+    MENOR_IGUAL     reduce using rule 27 (expresion -> R_TRUE .)
+    IGUAL_IGUAL     reduce using rule 27 (expresion -> R_TRUE .)
+    DIFERENTE       reduce using rule 27 (expresion -> R_TRUE .)
+    AND             reduce using rule 27 (expresion -> R_TRUE .)
+    OR              reduce using rule 27 (expresion -> R_TRUE .)
+    LLAVE_IZQ       reduce using rule 27 (expresion -> R_TRUE .)
+    PUNTO_COMA      reduce using rule 27 (expresion -> R_TRUE .)
+    PAR_DER         reduce using rule 27 (expresion -> R_TRUE .)
+
+
+state 19
+
+    (28) expresion -> R_FALSE .
+
+    MAS             reduce using rule 28 (expresion -> R_FALSE .)
+    MENOS           reduce using rule 28 (expresion -> R_FALSE .)
+    POR             reduce using rule 28 (expresion -> R_FALSE .)
+    DIV             reduce using rule 28 (expresion -> R_FALSE .)
+    MOD             reduce using rule 28 (expresion -> R_FALSE .)
+    MAYOR_QUE       reduce using rule 28 (expresion -> R_FALSE .)
+    MENOR_QUE       reduce using rule 28 (expresion -> R_FALSE .)
+    MAYOR_IGUAL     reduce using rule 28 (expresion -> R_FALSE .)
+    MENOR_IGUAL     reduce using rule 28 (expresion -> R_FALSE .)
+    IGUAL_IGUAL     reduce using rule 28 (expresion -> R_FALSE .)
+    DIFERENTE       reduce using rule 28 (expresion -> R_FALSE .)
+    AND             reduce using rule 28 (expresion -> R_FALSE .)
+    OR              reduce using rule 28 (expresion -> R_FALSE .)
+    LLAVE_IZQ       reduce using rule 28 (expresion -> R_FALSE .)
+    PUNTO_COMA      reduce using rule 28 (expresion -> R_FALSE .)
+    PAR_DER         reduce using rule 28 (expresion -> R_FALSE .)
+
+
+state 20
+
+    (29) expresion -> ID .
+
+    MAS             reduce using rule 29 (expresion -> ID .)
+    MENOS           reduce using rule 29 (expresion -> ID .)
+    POR             reduce using rule 29 (expresion -> ID .)
+    DIV             reduce using rule 29 (expresion -> ID .)
+    MOD             reduce using rule 29 (expresion -> ID .)
+    MAYOR_QUE       reduce using rule 29 (expresion -> ID .)
+    MENOR_QUE       reduce using rule 29 (expresion -> ID .)
+    MAYOR_IGUAL     reduce using rule 29 (expresion -> ID .)
+    MENOR_IGUAL     reduce using rule 29 (expresion -> ID .)
+    IGUAL_IGUAL     reduce using rule 29 (expresion -> ID .)
+    DIFERENTE       reduce using rule 29 (expresion -> ID .)
+    AND             reduce using rule 29 (expresion -> ID .)
+    OR              reduce using rule 29 (expresion -> ID .)
+    LLAVE_IZQ       reduce using rule 29 (expresion -> ID .)
+    PUNTO_COMA      reduce using rule 29 (expresion -> ID .)
+    PAR_DER         reduce using rule 29 (expresion -> ID .)
+
+
+state 21
+
+    (35) instruccion -> R_WHILE expresion . bloque
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+    (30) bloque -> . LLAVE_IZQ instrucciones LLAVE_DER
+    (31) bloque -> . LLAVE_IZQ LLAVE_DER
+
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+    MAYOR_QUE       shift and go to state 32
+    MENOR_QUE       shift and go to state 33
+    MAYOR_IGUAL     shift and go to state 34
+    MENOR_IGUAL     shift and go to state 35
+    IGUAL_IGUAL     shift and go to state 36
+    DIFERENTE       shift and go to state 37
+    AND             shift and go to state 38
+    OR              shift and go to state 39
+    LLAVE_IZQ       shift and go to state 40
+
+    bloque                         shift and go to state 41
+
+state 22
+
+    (4) instruccion -> R_LET R_MUT ID . DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+
+    DOS_PUNTOS      shift and go to state 42
+
+
+state 23
+
+    (5) instruccion -> R_LET ID DOS_PUNTOS . tipo IGUAL expresion PUNTO_COMA
+    (7) tipo -> . R_I32
+    (8) tipo -> . R_F64
+    (9) tipo -> . R_STRING
+    (10) tipo -> . R_BOOL
+
+    R_I32           shift and go to state 44
+    R_F64           shift and go to state 45
+    R_STRING        shift and go to state 46
+    R_BOOL          shift and go to state 47
+
+    tipo                           shift and go to state 43
+
+state 24
+
+    (34) instruccion -> ID IGUAL expresion . PUNTO_COMA
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    PUNTO_COMA      shift and go to state 48
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+    MAYOR_QUE       shift and go to state 32
+    MENOR_QUE       shift and go to state 33
+    MAYOR_IGUAL     shift and go to state 34
+    MENOR_IGUAL     shift and go to state 35
+    IGUAL_IGUAL     shift and go to state 36
+    DIFERENTE       shift and go to state 37
+    AND             shift and go to state 38
+    OR              shift and go to state 39
+
+
+state 25
+
+    (6) instruccion -> R_PRINTLN NOT PAR_IZQ . expresion PAR_DER PUNTO_COMA
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 49
+
+state 26
+
+    (32) instruccion -> R_IF expresion bloque .
+    (33) instruccion -> R_IF expresion bloque . R_ELSE bloque
+
+    R_LET           reduce using rule 32 (instruccion -> R_IF expresion bloque .)
+    R_PRINTLN       reduce using rule 32 (instruccion -> R_IF expresion bloque .)
+    R_IF            reduce using rule 32 (instruccion -> R_IF expresion bloque .)
+    ID              reduce using rule 32 (instruccion -> R_IF expresion bloque .)
+    R_WHILE         reduce using rule 32 (instruccion -> R_IF expresion bloque .)
+    $end            reduce using rule 32 (instruccion -> R_IF expresion bloque .)
+    LLAVE_DER       reduce using rule 32 (instruccion -> R_IF expresion bloque .)
+    R_ELSE          shift and go to state 50
+
+
+state 27
+
+    (11) expresion -> expresion MAS . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 51
+
+state 28
+
+    (12) expresion -> expresion MENOS . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 52
+
+state 29
+
+    (13) expresion -> expresion POR . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 53
+
+state 30
+
+    (14) expresion -> expresion DIV . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 54
+
+state 31
+
+    (15) expresion -> expresion MOD . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 55
+
+state 32
+
+    (16) expresion -> expresion MAYOR_QUE . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 56
+
+state 33
+
+    (17) expresion -> expresion MENOR_QUE . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 57
+
+state 34
+
+    (18) expresion -> expresion MAYOR_IGUAL . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 58
+
+state 35
+
+    (19) expresion -> expresion MENOR_IGUAL . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 59
+
+state 36
+
+    (20) expresion -> expresion IGUAL_IGUAL . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 60
+
+state 37
+
+    (21) expresion -> expresion DIFERENTE . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 61
+
+state 38
+
+    (22) expresion -> expresion AND . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 62
+
+state 39
+
+    (23) expresion -> expresion OR . expresion
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 63
+
+state 40
+
+    (30) bloque -> LLAVE_IZQ . instrucciones LLAVE_DER
+    (31) bloque -> LLAVE_IZQ . LLAVE_DER
+    (2) instrucciones -> . instrucciones instruccion
+    (3) instrucciones -> . instruccion
+    (4) instruccion -> . R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+    (5) instruccion -> . R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+    (6) instruccion -> . R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA
+    (32) instruccion -> . R_IF expresion bloque
+    (33) instruccion -> . R_IF expresion bloque R_ELSE bloque
+    (34) instruccion -> . ID IGUAL expresion PUNTO_COMA
+    (35) instruccion -> . R_WHILE expresion bloque
+
+    LLAVE_DER       shift and go to state 65
+    R_LET           shift and go to state 4
+    R_PRINTLN       shift and go to state 6
+    R_IF            shift and go to state 7
+    ID              shift and go to state 5
+    R_WHILE         shift and go to state 8
+
+    instrucciones                  shift and go to state 64
+    instruccion                    shift and go to state 3
+
+state 41
+
+    (35) instruccion -> R_WHILE expresion bloque .
+
+    R_LET           reduce using rule 35 (instruccion -> R_WHILE expresion bloque .)
+    R_PRINTLN       reduce using rule 35 (instruccion -> R_WHILE expresion bloque .)
+    R_IF            reduce using rule 35 (instruccion -> R_WHILE expresion bloque .)
+    ID              reduce using rule 35 (instruccion -> R_WHILE expresion bloque .)
+    R_WHILE         reduce using rule 35 (instruccion -> R_WHILE expresion bloque .)
+    $end            reduce using rule 35 (instruccion -> R_WHILE expresion bloque .)
+    LLAVE_DER       reduce using rule 35 (instruccion -> R_WHILE expresion bloque .)
+
+
+state 42
+
+    (4) instruccion -> R_LET R_MUT ID DOS_PUNTOS . tipo IGUAL expresion PUNTO_COMA
+    (7) tipo -> . R_I32
+    (8) tipo -> . R_F64
+    (9) tipo -> . R_STRING
+    (10) tipo -> . R_BOOL
+
+    R_I32           shift and go to state 44
+    R_F64           shift and go to state 45
+    R_STRING        shift and go to state 46
+    R_BOOL          shift and go to state 47
+
+    tipo                           shift and go to state 66
+
+state 43
+
+    (5) instruccion -> R_LET ID DOS_PUNTOS tipo . IGUAL expresion PUNTO_COMA
+
+    IGUAL           shift and go to state 67
+
+
+state 44
+
+    (7) tipo -> R_I32 .
+
+    IGUAL           reduce using rule 7 (tipo -> R_I32 .)
+
+
+state 45
+
+    (8) tipo -> R_F64 .
+
+    IGUAL           reduce using rule 8 (tipo -> R_F64 .)
+
+
+state 46
+
+    (9) tipo -> R_STRING .
+
+    IGUAL           reduce using rule 9 (tipo -> R_STRING .)
+
+
+state 47
+
+    (10) tipo -> R_BOOL .
+
+    IGUAL           reduce using rule 10 (tipo -> R_BOOL .)
+
+
+state 48
+
+    (34) instruccion -> ID IGUAL expresion PUNTO_COMA .
+
+    R_LET           reduce using rule 34 (instruccion -> ID IGUAL expresion PUNTO_COMA .)
+    R_PRINTLN       reduce using rule 34 (instruccion -> ID IGUAL expresion PUNTO_COMA .)
+    R_IF            reduce using rule 34 (instruccion -> ID IGUAL expresion PUNTO_COMA .)
+    ID              reduce using rule 34 (instruccion -> ID IGUAL expresion PUNTO_COMA .)
+    R_WHILE         reduce using rule 34 (instruccion -> ID IGUAL expresion PUNTO_COMA .)
+    $end            reduce using rule 34 (instruccion -> ID IGUAL expresion PUNTO_COMA .)
+    LLAVE_DER       reduce using rule 34 (instruccion -> ID IGUAL expresion PUNTO_COMA .)
+
+
+state 49
+
+    (6) instruccion -> R_PRINTLN NOT PAR_IZQ expresion . PAR_DER PUNTO_COMA
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    PAR_DER         shift and go to state 68
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+    MAYOR_QUE       shift and go to state 32
+    MENOR_QUE       shift and go to state 33
+    MAYOR_IGUAL     shift and go to state 34
+    MENOR_IGUAL     shift and go to state 35
+    IGUAL_IGUAL     shift and go to state 36
+    DIFERENTE       shift and go to state 37
+    AND             shift and go to state 38
+    OR              shift and go to state 39
+
+
+state 50
+
+    (33) instruccion -> R_IF expresion bloque R_ELSE . bloque
+    (30) bloque -> . LLAVE_IZQ instrucciones LLAVE_DER
+    (31) bloque -> . LLAVE_IZQ LLAVE_DER
+
+    LLAVE_IZQ       shift and go to state 40
+
+    bloque                         shift and go to state 69
+
+state 51
+
+    (11) expresion -> expresion MAS expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAS             reduce using rule 11 (expresion -> expresion MAS expresion .)
+    MENOS           reduce using rule 11 (expresion -> expresion MAS expresion .)
+    MAYOR_QUE       reduce using rule 11 (expresion -> expresion MAS expresion .)
+    MENOR_QUE       reduce using rule 11 (expresion -> expresion MAS expresion .)
+    MAYOR_IGUAL     reduce using rule 11 (expresion -> expresion MAS expresion .)
+    MENOR_IGUAL     reduce using rule 11 (expresion -> expresion MAS expresion .)
+    IGUAL_IGUAL     reduce using rule 11 (expresion -> expresion MAS expresion .)
+    DIFERENTE       reduce using rule 11 (expresion -> expresion MAS expresion .)
+    AND             reduce using rule 11 (expresion -> expresion MAS expresion .)
+    OR              reduce using rule 11 (expresion -> expresion MAS expresion .)
+    LLAVE_IZQ       reduce using rule 11 (expresion -> expresion MAS expresion .)
+    PUNTO_COMA      reduce using rule 11 (expresion -> expresion MAS expresion .)
+    PAR_DER         reduce using rule 11 (expresion -> expresion MAS expresion .)
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+
+  ! POR             [ reduce using rule 11 (expresion -> expresion MAS expresion .) ]
+  ! DIV             [ reduce using rule 11 (expresion -> expresion MAS expresion .) ]
+  ! MOD             [ reduce using rule 11 (expresion -> expresion MAS expresion .) ]
+  ! MAS             [ shift and go to state 27 ]
+  ! MENOS           [ shift and go to state 28 ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 52
+
+    (12) expresion -> expresion MENOS expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAS             reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    MENOS           reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    MAYOR_QUE       reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    MENOR_QUE       reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    MAYOR_IGUAL     reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    MENOR_IGUAL     reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    IGUAL_IGUAL     reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    DIFERENTE       reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    AND             reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    OR              reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    LLAVE_IZQ       reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    PUNTO_COMA      reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    PAR_DER         reduce using rule 12 (expresion -> expresion MENOS expresion .)
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+
+  ! POR             [ reduce using rule 12 (expresion -> expresion MENOS expresion .) ]
+  ! DIV             [ reduce using rule 12 (expresion -> expresion MENOS expresion .) ]
+  ! MOD             [ reduce using rule 12 (expresion -> expresion MENOS expresion .) ]
+  ! MAS             [ shift and go to state 27 ]
+  ! MENOS           [ shift and go to state 28 ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 53
+
+    (13) expresion -> expresion POR expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAS             reduce using rule 13 (expresion -> expresion POR expresion .)
+    MENOS           reduce using rule 13 (expresion -> expresion POR expresion .)
+    POR             reduce using rule 13 (expresion -> expresion POR expresion .)
+    DIV             reduce using rule 13 (expresion -> expresion POR expresion .)
+    MOD             reduce using rule 13 (expresion -> expresion POR expresion .)
+    MAYOR_QUE       reduce using rule 13 (expresion -> expresion POR expresion .)
+    MENOR_QUE       reduce using rule 13 (expresion -> expresion POR expresion .)
+    MAYOR_IGUAL     reduce using rule 13 (expresion -> expresion POR expresion .)
+    MENOR_IGUAL     reduce using rule 13 (expresion -> expresion POR expresion .)
+    IGUAL_IGUAL     reduce using rule 13 (expresion -> expresion POR expresion .)
+    DIFERENTE       reduce using rule 13 (expresion -> expresion POR expresion .)
+    AND             reduce using rule 13 (expresion -> expresion POR expresion .)
+    OR              reduce using rule 13 (expresion -> expresion POR expresion .)
+    LLAVE_IZQ       reduce using rule 13 (expresion -> expresion POR expresion .)
+    PUNTO_COMA      reduce using rule 13 (expresion -> expresion POR expresion .)
+    PAR_DER         reduce using rule 13 (expresion -> expresion POR expresion .)
+
+  ! MAS             [ shift and go to state 27 ]
+  ! MENOS           [ shift and go to state 28 ]
+  ! POR             [ shift and go to state 29 ]
+  ! DIV             [ shift and go to state 30 ]
+  ! MOD             [ shift and go to state 31 ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 54
+
+    (14) expresion -> expresion DIV expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAS             reduce using rule 14 (expresion -> expresion DIV expresion .)
+    MENOS           reduce using rule 14 (expresion -> expresion DIV expresion .)
+    POR             reduce using rule 14 (expresion -> expresion DIV expresion .)
+    DIV             reduce using rule 14 (expresion -> expresion DIV expresion .)
+    MOD             reduce using rule 14 (expresion -> expresion DIV expresion .)
+    MAYOR_QUE       reduce using rule 14 (expresion -> expresion DIV expresion .)
+    MENOR_QUE       reduce using rule 14 (expresion -> expresion DIV expresion .)
+    MAYOR_IGUAL     reduce using rule 14 (expresion -> expresion DIV expresion .)
+    MENOR_IGUAL     reduce using rule 14 (expresion -> expresion DIV expresion .)
+    IGUAL_IGUAL     reduce using rule 14 (expresion -> expresion DIV expresion .)
+    DIFERENTE       reduce using rule 14 (expresion -> expresion DIV expresion .)
+    AND             reduce using rule 14 (expresion -> expresion DIV expresion .)
+    OR              reduce using rule 14 (expresion -> expresion DIV expresion .)
+    LLAVE_IZQ       reduce using rule 14 (expresion -> expresion DIV expresion .)
+    PUNTO_COMA      reduce using rule 14 (expresion -> expresion DIV expresion .)
+    PAR_DER         reduce using rule 14 (expresion -> expresion DIV expresion .)
+
+  ! MAS             [ shift and go to state 27 ]
+  ! MENOS           [ shift and go to state 28 ]
+  ! POR             [ shift and go to state 29 ]
+  ! DIV             [ shift and go to state 30 ]
+  ! MOD             [ shift and go to state 31 ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 55
+
+    (15) expresion -> expresion MOD expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAS             reduce using rule 15 (expresion -> expresion MOD expresion .)
+    MENOS           reduce using rule 15 (expresion -> expresion MOD expresion .)
+    POR             reduce using rule 15 (expresion -> expresion MOD expresion .)
+    DIV             reduce using rule 15 (expresion -> expresion MOD expresion .)
+    MOD             reduce using rule 15 (expresion -> expresion MOD expresion .)
+    MAYOR_QUE       reduce using rule 15 (expresion -> expresion MOD expresion .)
+    MENOR_QUE       reduce using rule 15 (expresion -> expresion MOD expresion .)
+    MAYOR_IGUAL     reduce using rule 15 (expresion -> expresion MOD expresion .)
+    MENOR_IGUAL     reduce using rule 15 (expresion -> expresion MOD expresion .)
+    IGUAL_IGUAL     reduce using rule 15 (expresion -> expresion MOD expresion .)
+    DIFERENTE       reduce using rule 15 (expresion -> expresion MOD expresion .)
+    AND             reduce using rule 15 (expresion -> expresion MOD expresion .)
+    OR              reduce using rule 15 (expresion -> expresion MOD expresion .)
+    LLAVE_IZQ       reduce using rule 15 (expresion -> expresion MOD expresion .)
+    PUNTO_COMA      reduce using rule 15 (expresion -> expresion MOD expresion .)
+    PAR_DER         reduce using rule 15 (expresion -> expresion MOD expresion .)
+
+  ! MAS             [ shift and go to state 27 ]
+  ! MENOS           [ shift and go to state 28 ]
+  ! POR             [ shift and go to state 29 ]
+  ! DIV             [ shift and go to state 30 ]
+  ! MOD             [ shift and go to state 31 ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 56
+
+    (16) expresion -> expresion MAYOR_QUE expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAYOR_QUE       reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    MENOR_QUE       reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    MAYOR_IGUAL     reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    MENOR_IGUAL     reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    IGUAL_IGUAL     reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    DIFERENTE       reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    AND             reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    OR              reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    LLAVE_IZQ       reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    PUNTO_COMA      reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    PAR_DER         reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .)
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+
+  ! MAS             [ reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .) ]
+  ! MENOS           [ reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .) ]
+  ! POR             [ reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .) ]
+  ! DIV             [ reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .) ]
+  ! MOD             [ reduce using rule 16 (expresion -> expresion MAYOR_QUE expresion .) ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 57
+
+    (17) expresion -> expresion MENOR_QUE expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAYOR_QUE       reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    MENOR_QUE       reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    MAYOR_IGUAL     reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    MENOR_IGUAL     reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    IGUAL_IGUAL     reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    DIFERENTE       reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    AND             reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    OR              reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    LLAVE_IZQ       reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    PUNTO_COMA      reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    PAR_DER         reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .)
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+
+  ! MAS             [ reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .) ]
+  ! MENOS           [ reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .) ]
+  ! POR             [ reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .) ]
+  ! DIV             [ reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .) ]
+  ! MOD             [ reduce using rule 17 (expresion -> expresion MENOR_QUE expresion .) ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 58
+
+    (18) expresion -> expresion MAYOR_IGUAL expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAYOR_QUE       reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    MENOR_QUE       reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    MAYOR_IGUAL     reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    MENOR_IGUAL     reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    IGUAL_IGUAL     reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    DIFERENTE       reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    AND             reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    OR              reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    LLAVE_IZQ       reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    PUNTO_COMA      reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    PAR_DER         reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .)
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+
+  ! MAS             [ reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! MENOS           [ reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! POR             [ reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! DIV             [ reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! MOD             [ reduce using rule 18 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 59
+
+    (19) expresion -> expresion MENOR_IGUAL expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAYOR_QUE       reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    MENOR_QUE       reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    MAYOR_IGUAL     reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    MENOR_IGUAL     reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    IGUAL_IGUAL     reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    DIFERENTE       reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    AND             reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    OR              reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    LLAVE_IZQ       reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    PUNTO_COMA      reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    PAR_DER         reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .)
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+
+  ! MAS             [ reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! MENOS           [ reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! POR             [ reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! DIV             [ reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! MOD             [ reduce using rule 19 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 60
+
+    (20) expresion -> expresion IGUAL_IGUAL expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAYOR_QUE       reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    MENOR_QUE       reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    MAYOR_IGUAL     reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    MENOR_IGUAL     reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    IGUAL_IGUAL     reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    DIFERENTE       reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    AND             reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    OR              reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    LLAVE_IZQ       reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    PUNTO_COMA      reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    PAR_DER         reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .)
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+
+  ! MAS             [ reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! MENOS           [ reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! POR             [ reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! DIV             [ reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! MOD             [ reduce using rule 20 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 61
+
+    (21) expresion -> expresion DIFERENTE expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    MAYOR_QUE       reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    MENOR_QUE       reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    MAYOR_IGUAL     reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    MENOR_IGUAL     reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    IGUAL_IGUAL     reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    DIFERENTE       reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    AND             reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    OR              reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    LLAVE_IZQ       reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    PUNTO_COMA      reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    PAR_DER         reduce using rule 21 (expresion -> expresion DIFERENTE expresion .)
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+
+  ! MAS             [ reduce using rule 21 (expresion -> expresion DIFERENTE expresion .) ]
+  ! MENOS           [ reduce using rule 21 (expresion -> expresion DIFERENTE expresion .) ]
+  ! POR             [ reduce using rule 21 (expresion -> expresion DIFERENTE expresion .) ]
+  ! DIV             [ reduce using rule 21 (expresion -> expresion DIFERENTE expresion .) ]
+  ! MOD             [ reduce using rule 21 (expresion -> expresion DIFERENTE expresion .) ]
+  ! MAYOR_QUE       [ shift and go to state 32 ]
+  ! MENOR_QUE       [ shift and go to state 33 ]
+  ! MAYOR_IGUAL     [ shift and go to state 34 ]
+  ! MENOR_IGUAL     [ shift and go to state 35 ]
+  ! IGUAL_IGUAL     [ shift and go to state 36 ]
+  ! DIFERENTE       [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 62
+
+    (22) expresion -> expresion AND expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    AND             reduce using rule 22 (expresion -> expresion AND expresion .)
+    OR              reduce using rule 22 (expresion -> expresion AND expresion .)
+    LLAVE_IZQ       reduce using rule 22 (expresion -> expresion AND expresion .)
+    PUNTO_COMA      reduce using rule 22 (expresion -> expresion AND expresion .)
+    PAR_DER         reduce using rule 22 (expresion -> expresion AND expresion .)
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+    MAYOR_QUE       shift and go to state 32
+    MENOR_QUE       shift and go to state 33
+    MAYOR_IGUAL     shift and go to state 34
+    MENOR_IGUAL     shift and go to state 35
+    IGUAL_IGUAL     shift and go to state 36
+    DIFERENTE       shift and go to state 37
+
+  ! MAS             [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! MENOS           [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! POR             [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! DIV             [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! MOD             [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! MAYOR_QUE       [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! MENOR_QUE       [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! MAYOR_IGUAL     [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! MENOR_IGUAL     [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! IGUAL_IGUAL     [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! DIFERENTE       [ reduce using rule 22 (expresion -> expresion AND expresion .) ]
+  ! AND             [ shift and go to state 38 ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 63
+
+    (23) expresion -> expresion OR expresion .
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    OR              reduce using rule 23 (expresion -> expresion OR expresion .)
+    LLAVE_IZQ       reduce using rule 23 (expresion -> expresion OR expresion .)
+    PUNTO_COMA      reduce using rule 23 (expresion -> expresion OR expresion .)
+    PAR_DER         reduce using rule 23 (expresion -> expresion OR expresion .)
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+    MAYOR_QUE       shift and go to state 32
+    MENOR_QUE       shift and go to state 33
+    MAYOR_IGUAL     shift and go to state 34
+    MENOR_IGUAL     shift and go to state 35
+    IGUAL_IGUAL     shift and go to state 36
+    DIFERENTE       shift and go to state 37
+    AND             shift and go to state 38
+
+  ! MAS             [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! MENOS           [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! POR             [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! DIV             [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! MOD             [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! MAYOR_QUE       [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! MENOR_QUE       [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! MAYOR_IGUAL     [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! MENOR_IGUAL     [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! IGUAL_IGUAL     [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! DIFERENTE       [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! AND             [ reduce using rule 23 (expresion -> expresion OR expresion .) ]
+  ! OR              [ shift and go to state 39 ]
+
+
+state 64
+
+    (30) bloque -> LLAVE_IZQ instrucciones . LLAVE_DER
+    (2) instrucciones -> instrucciones . instruccion
+    (4) instruccion -> . R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+    (5) instruccion -> . R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA
+    (6) instruccion -> . R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA
+    (32) instruccion -> . R_IF expresion bloque
+    (33) instruccion -> . R_IF expresion bloque R_ELSE bloque
+    (34) instruccion -> . ID IGUAL expresion PUNTO_COMA
+    (35) instruccion -> . R_WHILE expresion bloque
+
+    LLAVE_DER       shift and go to state 70
+    R_LET           shift and go to state 4
+    R_PRINTLN       shift and go to state 6
+    R_IF            shift and go to state 7
+    ID              shift and go to state 5
+    R_WHILE         shift and go to state 8
+
+    instruccion                    shift and go to state 9
+
+state 65
+
+    (31) bloque -> LLAVE_IZQ LLAVE_DER .
+
+    R_ELSE          reduce using rule 31 (bloque -> LLAVE_IZQ LLAVE_DER .)
+    R_LET           reduce using rule 31 (bloque -> LLAVE_IZQ LLAVE_DER .)
+    R_PRINTLN       reduce using rule 31 (bloque -> LLAVE_IZQ LLAVE_DER .)
+    R_IF            reduce using rule 31 (bloque -> LLAVE_IZQ LLAVE_DER .)
+    ID              reduce using rule 31 (bloque -> LLAVE_IZQ LLAVE_DER .)
+    R_WHILE         reduce using rule 31 (bloque -> LLAVE_IZQ LLAVE_DER .)
+    $end            reduce using rule 31 (bloque -> LLAVE_IZQ LLAVE_DER .)
+    LLAVE_DER       reduce using rule 31 (bloque -> LLAVE_IZQ LLAVE_DER .)
+
+
+state 66
+
+    (4) instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo . IGUAL expresion PUNTO_COMA
+
+    IGUAL           shift and go to state 71
+
+
+state 67
+
+    (5) instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL . expresion PUNTO_COMA
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 72
+
+state 68
+
+    (6) instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 73
+
+
+state 69
+
+    (33) instruccion -> R_IF expresion bloque R_ELSE bloque .
+
+    R_LET           reduce using rule 33 (instruccion -> R_IF expresion bloque R_ELSE bloque .)
+    R_PRINTLN       reduce using rule 33 (instruccion -> R_IF expresion bloque R_ELSE bloque .)
+    R_IF            reduce using rule 33 (instruccion -> R_IF expresion bloque R_ELSE bloque .)
+    ID              reduce using rule 33 (instruccion -> R_IF expresion bloque R_ELSE bloque .)
+    R_WHILE         reduce using rule 33 (instruccion -> R_IF expresion bloque R_ELSE bloque .)
+    $end            reduce using rule 33 (instruccion -> R_IF expresion bloque R_ELSE bloque .)
+    LLAVE_DER       reduce using rule 33 (instruccion -> R_IF expresion bloque R_ELSE bloque .)
+
+
+state 70
+
+    (30) bloque -> LLAVE_IZQ instrucciones LLAVE_DER .
+
+    R_ELSE          reduce using rule 30 (bloque -> LLAVE_IZQ instrucciones LLAVE_DER .)
+    R_LET           reduce using rule 30 (bloque -> LLAVE_IZQ instrucciones LLAVE_DER .)
+    R_PRINTLN       reduce using rule 30 (bloque -> LLAVE_IZQ instrucciones LLAVE_DER .)
+    R_IF            reduce using rule 30 (bloque -> LLAVE_IZQ instrucciones LLAVE_DER .)
+    ID              reduce using rule 30 (bloque -> LLAVE_IZQ instrucciones LLAVE_DER .)
+    R_WHILE         reduce using rule 30 (bloque -> LLAVE_IZQ instrucciones LLAVE_DER .)
+    $end            reduce using rule 30 (bloque -> LLAVE_IZQ instrucciones LLAVE_DER .)
+    LLAVE_DER       reduce using rule 30 (bloque -> LLAVE_IZQ instrucciones LLAVE_DER .)
+
+
+state 71
+
+    (4) instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL . expresion PUNTO_COMA
+    (11) expresion -> . expresion MAS expresion
+    (12) expresion -> . expresion MENOS expresion
+    (13) expresion -> . expresion POR expresion
+    (14) expresion -> . expresion DIV expresion
+    (15) expresion -> . expresion MOD expresion
+    (16) expresion -> . expresion MAYOR_QUE expresion
+    (17) expresion -> . expresion MENOR_QUE expresion
+    (18) expresion -> . expresion MAYOR_IGUAL expresion
+    (19) expresion -> . expresion MENOR_IGUAL expresion
+    (20) expresion -> . expresion IGUAL_IGUAL expresion
+    (21) expresion -> . expresion DIFERENTE expresion
+    (22) expresion -> . expresion AND expresion
+    (23) expresion -> . expresion OR expresion
+    (24) expresion -> . ENTERO
+    (25) expresion -> . DECIMAL
+    (26) expresion -> . CADENA
+    (27) expresion -> . R_TRUE
+    (28) expresion -> . R_FALSE
+    (29) expresion -> . ID
+
+    ENTERO          shift and go to state 15
+    DECIMAL         shift and go to state 16
+    CADENA          shift and go to state 17
+    R_TRUE          shift and go to state 18
+    R_FALSE         shift and go to state 19
+    ID              shift and go to state 20
+
+    expresion                      shift and go to state 74
+
+state 72
+
+    (5) instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion . PUNTO_COMA
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    PUNTO_COMA      shift and go to state 75
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+    MAYOR_QUE       shift and go to state 32
+    MENOR_QUE       shift and go to state 33
+    MAYOR_IGUAL     shift and go to state 34
+    MENOR_IGUAL     shift and go to state 35
+    IGUAL_IGUAL     shift and go to state 36
+    DIFERENTE       shift and go to state 37
+    AND             shift and go to state 38
+    OR              shift and go to state 39
+
+
+state 73
+
+    (6) instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA .
+
+    R_LET           reduce using rule 6 (instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA .)
+    R_PRINTLN       reduce using rule 6 (instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA .)
+    R_IF            reduce using rule 6 (instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA .)
+    ID              reduce using rule 6 (instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA .)
+    R_WHILE         reduce using rule 6 (instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA .)
+    $end            reduce using rule 6 (instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA .)
+    LLAVE_DER       reduce using rule 6 (instruccion -> R_PRINTLN NOT PAR_IZQ expresion PAR_DER PUNTO_COMA .)
+
+
+state 74
+
+    (4) instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion . PUNTO_COMA
+    (11) expresion -> expresion . MAS expresion
+    (12) expresion -> expresion . MENOS expresion
+    (13) expresion -> expresion . POR expresion
+    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion . MOD expresion
+    (16) expresion -> expresion . MAYOR_QUE expresion
+    (17) expresion -> expresion . MENOR_QUE expresion
+    (18) expresion -> expresion . MAYOR_IGUAL expresion
+    (19) expresion -> expresion . MENOR_IGUAL expresion
+    (20) expresion -> expresion . IGUAL_IGUAL expresion
+    (21) expresion -> expresion . DIFERENTE expresion
+    (22) expresion -> expresion . AND expresion
+    (23) expresion -> expresion . OR expresion
+
+    PUNTO_COMA      shift and go to state 76
+    MAS             shift and go to state 27
+    MENOS           shift and go to state 28
+    POR             shift and go to state 29
+    DIV             shift and go to state 30
+    MOD             shift and go to state 31
+    MAYOR_QUE       shift and go to state 32
+    MENOR_QUE       shift and go to state 33
+    MAYOR_IGUAL     shift and go to state 34
+    MENOR_IGUAL     shift and go to state 35
+    IGUAL_IGUAL     shift and go to state 36
+    DIFERENTE       shift and go to state 37
+    AND             shift and go to state 38
+    OR              shift and go to state 39
+
+
+state 75
+
+    (5) instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .
+
+    R_LET           reduce using rule 5 (instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    R_PRINTLN       reduce using rule 5 (instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    R_IF            reduce using rule 5 (instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    ID              reduce using rule 5 (instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    R_WHILE         reduce using rule 5 (instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    $end            reduce using rule 5 (instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    LLAVE_DER       reduce using rule 5 (instruccion -> R_LET ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+
+
+state 76
+
+    (4) instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .
+
+    R_LET           reduce using rule 4 (instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    R_PRINTLN       reduce using rule 4 (instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    R_IF            reduce using rule 4 (instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    ID              reduce using rule 4 (instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    R_WHILE         reduce using rule 4 (instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    $end            reduce using rule 4 (instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+    LLAVE_DER       reduce using rule 4 (instruccion -> R_LET R_MUT ID DOS_PUNTOS tipo IGUAL expresion PUNTO_COMA .)
+
