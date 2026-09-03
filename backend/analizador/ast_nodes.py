@@ -333,6 +333,7 @@ class SentenciaContinue(Instruccion):
     def ejecutar(self, entorno):
         raise ContinueException(self.etiqueta)
 
+
 class CicloWhile(Instruccion):
     def __init__(self, condicion, bloque, linea, columna):
         super().__init__(linea, columna)
@@ -340,19 +341,22 @@ class CicloWhile(Instruccion):
         self.bloque = bloque
 
     def ejecutar(self, entorno):
+        es_falso = False
         while True:
             cond = self.condicion.ejecutar(entorno)
             if cond is None or cond.tipo != 'bool':
                 break
-            if cond.valor is True:
-                try:
-                    self.bloque.ejecutar(entorno)
-                except BreakException:
+            if not cond.valor:
+                if es_falso:
                     break
-                except ContinueException:
-                    continue
-            else:
+                es_falso = True
+            try:
+                self.bloque.ejecutar(entorno)
+            except BreakException:
                 break
+            except ContinueException:
+                continue
+           
 
 class ReturnException(Exception):
     def __init__(self, resultado):
