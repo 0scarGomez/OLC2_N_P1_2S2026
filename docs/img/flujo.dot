@@ -1,0 +1,16 @@
+digraph G { rankdir=LR; node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, fillcolor="#eff6ff"]; edge [color="#475569"];
+ src [label="Código fuente\n(.og)", fillcolor="#fef9c3"];
+ lex [label="Análisis léxico\nPLY lex\n(lexer.py)"];
+ par [label="Análisis sintáctico\nPLY yacc\n(parser.py)"];
+ ast [label="AST propio\n(ast_nodes.py)", fillcolor="#dcfce7"];
+ sem [label="Análisis semántico\nVisitor\n(semantic.py)"];
+ tab [label="Tabla de símbolos\n(symbols.py)", fillcolor="#dcfce7"];
+ gen [label="Generación ARM64\nVisitor directo\n(codegen.py + runtime.py)"];
+ asm [label="programa.s", fillcolor="#fef9c3"];
+ as [label="aarch64-linux-gnu-as\n(ensamblado)"]; ld [label="aarch64-linux-gnu-ld\n(enlace)"]; q [label="qemu-aarch64\n(User Mode)"]; out [label="stdout / stderr", fillcolor="#fef9c3"];
+ err [label="Tabla de errores\n(errors.py)", fillcolor="#fee2e2"];
+ rep [label="Reportes HTML\nGraphviz DOT/SVG/PNG\n(reports.py)", fillcolor="#fce7f3"];
+ src->lex->par->ast->sem->gen->asm->as->ld->q->out;
+ sem->tab; lex->err [style=dashed]; par->err [style=dashed]; sem->err [style=dashed];
+ ast->rep; tab->rep; err->rep;
+}

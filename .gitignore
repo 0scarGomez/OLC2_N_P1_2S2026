@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+compiler/parser.out
+compiler/oxigen_parsetab.py
+reports/
+*.o

@@ -1,0 +1,18 @@
+digraph C { rankdir=BT; node [shape=record, fontname="Helvetica", fontsize=10, style=filled, fillcolor="#f8fafc"]; edge [arrowhead=empty];
+ ASTNode [label="{ASTNode|line, col, type|accept(visitor)\lchildren()\l}"];
+ Program [label="{Program|items}"]; Function [label="{Function|name, params, ret_type, body}"]; Param [label="{Param|name, ptype}"];
+ Block [label="{Block|stmts}"]; VarDecl [label="{VarDecl|name, mutable, type_ann, init}"]; Assign [label="{Assign|target, op, value}"];
+ If [label="{If|cond, then, else_}"]; While [label="{While|cond, body, label}"]; Loop [label="{Loop|body, label}"]; For [label="{For|var, iterable, body}"];
+ Match [label="{Match|subject, arms}"]; Return [label="{Return|value}"];
+ Binary [label="{Binary|op, left, right}"]; Unary [label="{Unary|op, operand}"]; Literal [label="{Literal|kind, value}"]; Identifier [label="{Identifier|name, sym}"];
+ Call [label="{Call|name, args}"]; MethodCall [label="{MethodCall|obj, name, args}"]; Index [label="{Index|base, index}"]; ArrayLit [label="{ArrayLit|elems}"]; Println [label="{Println|args, fmt}"];
+ {Program; Function; Param; Block; VarDecl; Assign; If; While; Loop; For; Match; Return; Binary; Unary; Literal; Identifier; Call; MethodCall; Index; ArrayLit; Println;} -> ASTNode;
+ Type [label="{Type (typesys)|kind, elem, n|slots()\lbyte_size()\l}", fillcolor="#dcfce7"];
+ Symbol [label="{Symbol|name, category, type, mutable, scope, slot}", fillcolor="#dcfce7"]; FuncSym [label="{FuncSym|name, params, ret, label}", fillcolor="#dcfce7"];
+ SymbolTable [label="{SymbolTable|scopes, all, funcs|push() pop()\ldeclare() lookup()\l}", fillcolor="#dcfce7"];
+ SemanticAnalyzer [label="{SemanticAnalyzer|errors, table|visit_*()\l}", fillcolor="#dbeafe"]; CodeGenerator [label="{CodeGenerator|lines, strings, helpers|visit_*()\lgen_as()\lemit_print()\l}", fillcolor="#dbeafe"];
+ OxigenLexer [label="{OxigenLexer|errors|t_*() reglas\l}", fillcolor="#fef9c3"]; OxigenParser [label="{OxigenParser|errors|p_*() producciones\lp_error() recuperación\l}", fillcolor="#fef9c3"];
+ ErrorList [label="{ErrorList|items, fatal|add()\lto_list()\l}", fillcolor="#fee2e2"];
+ edge [arrowhead=vee, style=dashed];
+ SemanticAnalyzer->SymbolTable; SemanticAnalyzer->ErrorList; SemanticAnalyzer->ASTNode [label="visita"]; CodeGenerator->ASTNode [label="visita"]; OxigenParser->OxigenLexer; OxigenParser->Program [label="construye"]; SymbolTable->Symbol; SymbolTable->FuncSym; ASTNode->Type [label="type"];
+}
